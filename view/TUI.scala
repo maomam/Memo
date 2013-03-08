@@ -7,7 +7,6 @@ import scala.swing.Reactor
 
 class TUI(var controller: Controller) extends Reactor {
 listenTo(controller)
-controller.setPictures
 
  printTui
   reactions += {

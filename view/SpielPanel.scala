@@ -116,7 +116,7 @@ def createButtons {
             alleButtons(k)(l).background = java.awt.Color.GREEN
           }
         } else {
-          if (getZelle(k, l).erraten == true) {
+          if (getZelle(k, l).guessed == true) {
             alleButtons(k)(l).background = java.awt.Color.BLACK
           } else {
             alleButtons(k)(l).background = java.awt.Color.GRAY

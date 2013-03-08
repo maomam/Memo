@@ -13,8 +13,10 @@ class Feld(_dimension: Int) {
 
       }
     }
+    
     temp
   }
+  setPictures
 
   var anzahlZellen = dimension * dimension - 1
   var spielfertig = false

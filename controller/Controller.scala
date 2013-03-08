@@ -26,15 +26,15 @@ class Controller(var feld: Feld) extends Publisher {
     
   
 
-  def hit(cell1Coordinates1: (Int,Int), cell2Coordinated: (Int,Int)): Unit = {
+ /* def hit(cell1Coordinates1: (Int,Int), cell2Coordinated: (Int,Int)): Unit = {
    if () 
      statusText = "Richtig"
      
     
     publish(new CellChanged)
-  }
+  }*/
 
-  var zufaelligesBestimmt = false
+
 
  
   def reset = {
