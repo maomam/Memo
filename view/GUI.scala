@@ -13,6 +13,11 @@ class CellClicked(val row: Int, val column: Int) extends Event
 class GUI(controller: Controller) extends Frame {
   var groesse = controller.feld.zellen.length
   listenTo(controller)
+  var peopleIcon = new ImageIcon("C:/Users/daryna.ariamnova/Documents/eclipse/workspace/Memospiel/src/images/ControlPictures/People.png")
+  var fruitsIcon = new ImageIcon("C:/Users/daryna.ariamnova/Documents/eclipse/workspace/Memospiel/src/images/ControlPictures/fruits.png")
+  var fashionIcon = new ImageIcon("C:/Users/daryna.ariamnova/Documents/eclipse/workspace/Memospiel/src/images/ControlPictures/fashion.png")
+  var countriesIcon = new ImageIcon("C:/Users/daryna.ariamnova/Documents/eclipse/workspace/Memospiel/src/images/ControlPictures/countries.png")
+  
   var statusline = new Label(controller.statusText)
   var cells = new BilderPanel(controller, groesse)
   def UserButtons(groesse: Int): BilderPanel = {
@@ -21,15 +26,15 @@ class GUI(controller: Controller) extends Frame {
   }
   title = "Memospiel"
 
-  val neustarten = new Button { //Button zum Neustarten des Spiels
+  val neustarten = new Button { 
     action = Action("Spiel neu Starten") {
       controller.reset
       statusline.text = controller.statusText
-      //      computercells.pcSchiffeSetzen(pccontroller.feld.zellen.length)
+   
     }
   }
 
-  val spiel2 = new Button { //Button zu aendern der Spielfeldgroe�e auf 2
+  val spiel2 = new Button { 
     action = Action("Spielgroesse 2") {
       if (groesse == 2) {
         controller.setStatusText("Spielfeld ist schon 2 Zellen gross")
@@ -42,7 +47,7 @@ class GUI(controller: Controller) extends Frame {
       statusline.text = controller.statusText
     }
   }
-  val spiel4 = new Button { //Button zu aendern der Spielfeldgroe�e auf 5
+  val spiel4 = new Button {
     action = Action("Spielgroesse 4") {
       if (groesse == 4) {
 
@@ -54,27 +59,27 @@ class GUI(controller: Controller) extends Frame {
         newSize(4)
 
       }
-      //      redraw
+    
       statusline.text = controller.statusText
     }
   }
-  val spiel8 = new Button { //Button zu aendern der Spielfeldgroe�e auf 10
+  val spiel8 = new Button { 
     action = Action("Spielgroesse 8") {
       if (groesse == 8) {
         controller.setStatusText("Spielfeld ist schon 8 Zellen gross")
       } else {
         
-          //                       controller.setSize(10); pccontroller.setSize(10)
+          
           groesse = 8
           controller.reset
           newSize(8)
-          //          redraw
+         
        
       }
       statusline.text = controller.statusText
     }
   }
-  val loesen = new Button { //Button zum Loesen des Spiels
+  val loesen = new Button { 
     action = Action("Spiel loesen") {
       controller.solve
       controller.setFeldGesetzt(false)
@@ -82,7 +87,7 @@ class GUI(controller: Controller) extends Frame {
     }
   }
 
-  def funktionsleiste = new FlowPanel {
+  def functionPanel = new FlowPanel {
     contents += neustarten
     contents += spiel2
     contents += spiel4
@@ -90,14 +95,50 @@ class GUI(controller: Controller) extends Frame {
     contents += loesen
     contents += statusline
   }
+  val people =new Button {
+    action =Action("People"){
+      
+    }
+    preferredSize_=(new Dimension(120, 60))
+    icon = peopleIcon
+  }
+  val fruits =new Button {
+    action =Action("Fruits"){
+      
+    }
+    preferredSize_=(new Dimension(120, 60))
+    icon= fruitsIcon
+  }
+  val fashion =new Button {
+    action =Action("Fashion"){
+      
+    }
+    preferredSize_=(new Dimension(120, 60))
+    icon= fashionIcon
+  }
+ 
+   val countries =new Button {
+     action =Action("Countries"){
+       
+     }
+    preferredSize_=(new Dimension(120, 60))
+    icon= countriesIcon
+   }
+   def picturesPanel =new GridPanel(4,1) {
+     contents +=people
+     contents +=fruits
+     contents+=fashion
+     contents+=countries
+   }
 
   contents = new BorderPanel {
 
-    add(funktionsleiste, BorderPanel.Position.North)
+    add(functionPanel, BorderPanel.Position.South)
+    add(picturesPanel, BorderPanel.Position.East)
 
     add(new FlowPanel {
 
-    }, BorderPanel.Position.South)
+    }, BorderPanel.Position.North)
 
     add(UserButtons(groesse), BorderPanel.Position.Center)
     visible = true
@@ -115,68 +156,58 @@ class GUI(controller: Controller) extends Frame {
   }
 
   def endGame = {
-    if (controller.feld.spielFertig == true) {
+    if (controller.feld.gameOver == true) {
       contents = new BorderPanel {
-        add(funktionsleiste, BorderPanel.Position.North)
-        add(new FlowPanel { //ueberschrift fuer die beiden Spielfelder
+        add(functionPanel, BorderPanel.Position.North)
+        add(new FlowPanel { 
         }, BorderPanel.Position.South)
         add(cells, BorderPanel.Position.West)
-        add(endGamePanel, BorderPanel.Position.Center)
+        
 
       }
     }
   }
 
-  def endGamePanel: Button = {
-    var ende = new Button //var ende = new Label("Spiel ist vorbei",new ImageIcon("c:\\test\\test.png"),Alignment.Right)
-    if (controller.feld.spielFertig == true) {
-      ende = new Button("Spiel ist vorbei\n Der PC hat gewonnen")
-    } else {
-      ende = new Button("Spiel ist vorbei\n Sie haben gewonnen")
-    }
-    ende
-  }
+ 
   def resize(newSize: Int) = {
-    //    println("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
     groesse = newSize
-
-    // cells.setSize(newSize)
     cells = new BilderPanel(controller, newSize)
     cells.setAlleButtonSize(newSize)
 
     contents = new BorderPanel {
-      add(funktionsleiste, BorderPanel.Position.North)
-      add(new FlowPanel { //ueberschrift fuer die beiden Spielfelder
-      }, BorderPanel.Position.South)
+      add(functionPanel, BorderPanel.Position.South)
+      add(picturesPanel, BorderPanel.Position.East)
+      add(new FlowPanel { 
+      }, BorderPanel.Position.North)
       add(cells, BorderPanel.Position.Center)
 
     }
-    //    repaint()
+   
   }
 
   def redraw = {
 
-    if (controller.feld.spielFertig == true) {
+    if (controller.feld.gameOver == true) {
       controller.setFeldGesetzt(false)
 
-      //      cells = new SpielerPanel(controller, groesse, schiffsleiste)
-      //        computercells = new PCPanel(pccontroller, groesse, controller)
+     
       contents = new BorderPanel {
-        add(funktionsleiste, BorderPanel.Position.North)
-        add(new FlowPanel { //ueberschrift fuer die beiden Spielfelder
-        }, BorderPanel.Position.South)
+        add(functionPanel, BorderPanel.Position.South)
+        add(picturesPanel, BorderPanel.Position.East)
+        add(new FlowPanel { 
+        }, BorderPanel.Position.North)
         add(cells, BorderPanel.Position.West)
-        add(endGamePanel, BorderPanel.Position.Center)
+       
 
       }
     } else {
       contents = new BorderPanel {
-        add(funktionsleiste, BorderPanel.Position.North)
-        add(new FlowPanel { //ueberschrift fuer die beiden Spielfelder
+        add(functionPanel, BorderPanel.Position.North)
+        add(new FlowPanel { 
 
         }, BorderPanel.Position.South)
         add(cells, BorderPanel.Position.West)
-        add(endGamePanel, BorderPanel.Position.Center)
+      
         cells = new BilderPanel(controller, groesse)
 
       }

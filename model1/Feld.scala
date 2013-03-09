@@ -19,8 +19,8 @@ class Feld(_dimension: Int) {
   setPictures
 
   var anzahlZellen = dimension * dimension - 1
-  var spielfertig = false
-  var zaehlerhit = 0
+  var gameIsOver = false
+  var counterguessed = 0
 
   def setPictures = {
     var isThisPictureSet = false
@@ -30,10 +30,7 @@ class Feld(_dimension: Int) {
           var Row = scala.util.Random.nextInt(dimension)
           var Column = scala.util.Random.nextInt(dimension)
           var Zelle = cell(Row, Column)
-          //println("Row"+Row)
-          // println("Column"+Column)
-          println(pairNr + "." + pairMember)
-          if (Zelle.pictureNr == 0) {
+           if (Zelle.pictureNr == 0) {
             isThisPictureSet = true
             Zelle.setPictureNr(pairNr)
 
@@ -53,43 +50,44 @@ class Feld(_dimension: Int) {
   def solve: Feld = {
     for (i <- 0 to dimension - 1) {
       for (j <- 0 to dimension - 1) {
-        zellen(i)(j).hit
+        zellen(i)(j).setGuessed
 
       }
     }
     return this
   }
 
-  def hit(reihe: Int, spalte: Int, zahl: Int): Boolean = {
-    if (zellen(reihe)(spalte).getErraten == false & zellen(reihe)(spalte).getOffen == true) {
-      if (zellen(reihe)(spalte).pictureNr == zahl)
-        zellen(reihe)(spalte).hit
-      zaehlerhit = zaehlerhit + 1
+  def checkGuess(reihe1: Int, spalte1: Int, reihe2: Int, spalte2: Int): Boolean = {
+    if (zellen(reihe1)(spalte1).getGuessed == false & zellen(reihe2)(spalte2).getGuessed == false) {
+      if (zellen(reihe1)(spalte1).pictureNr == zellen(reihe1)(spalte1).pictureNr)
+        zellen(reihe1)(spalte1).setGuessed
+        zellen(reihe2)(spalte2).setGuessed
+      counterguessed = counterguessed + 1
 
       return true
     } else
       return false
   }
 
-  def spielFertig: Boolean = {
+  def gameOver: Boolean = {
     if (dimension == 2) {
-      if (zaehlerhit == 2) {
-        spielfertig = true
-        return spielfertig
+      if (counterguessed == 2) {
+        gameIsOver = true
+        return gameIsOver
       }
     }
 
     if (dimension == 4) {
-      if (zaehlerhit == 8) {
-        spielfertig = true
-        return spielfertig
+      if (counterguessed == 8) {
+        gameIsOver = true
+        return gameIsOver
       }
 
     }
     if (dimension == 8) {
-      if (zaehlerhit == 32) {
-        spielfertig = true
-        return spielfertig
+      if (counterguessed == 32) {
+        gameIsOver = true
+        return gameIsOver
       }
 
     }
@@ -98,7 +96,7 @@ class Feld(_dimension: Int) {
 
   def cell(r: Int, c: Int) = zellen(r)(c)
 
-  override def toString = {
+/*  override def toString = {
     val lineseparator = ("+-" + ("--" * (dimension / 2))) * dimension + "+\n"
     val line = ("|" + (" " * (dimension / 2)) + ("x" + (" " * (dimension / 2)))) * dimension + "|\n"
     var box = "\n" + (lineseparator + (line)) * dimension + lineseparator
@@ -110,22 +108,22 @@ class Feld(_dimension: Int) {
       }
     }
     box
-  }
+  }*/
 
-  /* override def toString = {
-    val lineseparator = ("+-" + ("--" * (anzahl / 2))) * anzahl + "+\n"
-    val line = ("|" + (" " * (anzahl / 2)) + ("x" + (" " * (anzahl / 2)))) * anzahl + "|\n"
-    var box = "\n" + (lineseparator + (line)) * anzahl + lineseparator
-    for (reihe <- 0 to anzahl - 1) {
-      for (spalte <- 0 to anzahl - 1) {
+  override def toString = {
+    val lineseparator = ("+-" + ("--" * (dimension / 2))) * dimension + "+\n"
+    val line = ("|" + (" " * (dimension / 2)) + ("x" + (" " * (dimension / 2)))) * dimension + "|\n"
+    var box = "\n" + (lineseparator + (line)) * dimension + lineseparator
+    for (reihe <- 0 to dimension - 1) {
+      for (spalte <- 0 to dimension - 1) {
 
-        if (zellen(reihe)(spalte).getErraten == false) {
+        if (zellen(reihe)(spalte).getGuessed == false) {
           
             (box = box.replaceFirst("x", zellen(reihe)(spalte).offen.toString()))
             (box = box.replaceFirst("false", " "))
-            (box = box.replaceFirst("true", zellen(reihe)(spalte).gesetzt.toString()))
+            (box = box.replaceFirst("true", zellen(reihe)(spalte).pictureNr.toString()))
           } else {
-            (box = box.replaceFirst("x", zellen(reihe)(spalte).gesetzt.toString()))
+            (box = box.replaceFirst("x", zellen(reihe)(spalte).pictureNr.toString()))
            
           }
         
@@ -133,5 +131,5 @@ class Feld(_dimension: Int) {
          }
     box
   }
-  */
+  
 }

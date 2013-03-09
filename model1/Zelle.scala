@@ -15,13 +15,13 @@ class Zelle (row: Int, col: Int){
   offen = variable
   
   }
-def hit = {guessed = true
+def setGuessed = {guessed = true
 }
  
   def getReihe: Int = reihe
   def getSpalte: Int = spalte
   def getOffen: Boolean = offen
-  def getErraten: Boolean = guessed
+  def getGuessed: Boolean = guessed
   
 
 }

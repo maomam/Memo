@@ -18,7 +18,7 @@ class Controller(var feld: Feld) extends Publisher {
 
   def setFeldGesetzt(gesetzt: Boolean) = { this.feldGesetzt = gesetzt }
   def setStatusText(text: String) { this.statusText = text }
-  def spielfertig: Boolean = { if (feld.spielFertig == true) { true } else { false } }
+  def spielfertig: Boolean = { if (feld.gameOver == true) { true } else { false } }
   def solve = { feld = feld.solve; statusText = "Spiel beendet"; publish(new CellChanged) }
   def updateFeld(feld: Feld) { this.feld = feld }
   def cell(row: Int, col: Int) = feld.cell(row, col)
@@ -26,13 +26,16 @@ class Controller(var feld: Feld) extends Publisher {
     
   
 
- /* def hit(cell1Coordinates1: (Int,Int), cell2Coordinated: (Int,Int)): Unit = {
-   if () 
+  def hit(cell1Coordinates1: (Int,Int), cell2Coordinates2: (Int,Int)): Unit = {
+   if (feld.checkGuess(cell1Coordinates1._1, cell1Coordinates1._2, cell2Coordinates2._1, cell2Coordinates2._1)==true) {
+      publish(new CellChanged)
      statusText = "Richtig"
+   }
+     
      
     
-    publish(new CellChanged)
-  }*/
+   
+  }
 
 
 
@@ -45,14 +48,6 @@ class Controller(var feld: Feld) extends Publisher {
     publish(new FeldResize(feld.dimension))
   }
 
- /* def getFeldGesetzt(): Boolean = {
-    if ((getSize == 8 && zaehler == 32) | (getSize == 4 && zaehler == 16) | (getSize == 2 && zaehler == 4) | feldGesetzt == true) {
-      feldGesetzt == true
-      feldGesetzt
-    } else {
-      false
-    }
-  }*/
   
   def setSize(newSize: Int) = {
     if (feld.dimension == newSize) {

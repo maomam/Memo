@@ -109,8 +109,8 @@ def createButtons {
     for (k <- 0 to (alleButtons.length - 1)) {
       for (l <- 0 to (alleButtons.length - 1)) {
 
-        if (getZelle(k, l).getErraten == true) {
-          if (getZelle(k, l).getErraten == true) {
+        if (getZelle(k, l).getGuessed == true) {
+          if (getZelle(k, l).getGuessed == true) {
             alleButtons(k)(l).background = java.awt.Color.RED
           } else {
             alleButtons(k)(l).background = java.awt.Color.GREEN
