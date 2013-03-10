@@ -1,46 +1,59 @@
 package view
 import controller._
-import model1.Feld
+import model._
 import util._
 import scala.swing.Reactor
 
 
 class TUI(var controller: Controller) extends Reactor {
-listenTo(controller)
+listenTo(controller.feld)
 
  printTui
   reactions += {
     case e: FeldResize => printTui
     case e: CellChanged => printTui
   }
-def printTui = {
+
+println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
+  		"q - Spiel verlassen,\n" +
+  		"l - Spiel lösen und beenden,\n" +
+  		"r - Spielfeld zurücksetzen,\n" +
+  		"size <s> - Groesse dies Spielfelds veraendern (2,4 oder 8 eingeben), " +
+  		"<x> - Zelle mit der Nummer <x> öffnen")
+
+  var size = controller.feld.zellen.length
+ def cellNumberToCoords(number:Int): (Int, Int) = {
+    val fieldD= controller.feld.dimension
+    ((number - 1) / fieldD, (number - 1) % fieldD)
+  }
+  
+  def printTui = {
     println("DAS SPIELFELD:")
     println(controller.feld.toString())
     
   }
-reactions += {
-    case e: FeldResize => printTui
-    case e: CellChanged => printTui
-  }
-
-  var size = controller.feld.zellen.length
- 
-  println("Sie haben folgende Auswahlmoeglichkeiten: q- Spiel verlassen, s- Spiel lösen und beenden, r- Spielfeld zurücksetzen,  Groesse dies Spielfelds veraendern (2,4 oder 8 eingeben), ")
+  
+  
   def readInput(eingabe: String) = {
     eingabe match {
-      case "s" => {
-        
-        controller.solve 
-       
-      }
+      case "l" => controller.solve
       case "r" => {
         controller.reset
+        listenTo(controller.feld) //this shouldn't be repeated
         println("Das  Feld wurde zurueckgesetzt")
       }
-      case "8" => controller.setSize(8);
-      case "4" => controller.setSize(4); 
-      case "2" => controller.setSize(2); 
-      case hit =>
+      // rewrite into single case 
+      case "size 8" => controller.setSize(8);
+      case "size 4" => controller.setSize(4); 
+      case "size 2" => controller.setSize(2); 
+      case numberString => {
+        println (numberString)
+        val number = numberString.toInt
+        val fieldDim = controller.feld.dimension
+        if (number >= 1 && number <= fieldDim*fieldDim){
+          controller.selectCell(cellNumberToCoords(number)) 
+        }
+      }
     }
   }
 }

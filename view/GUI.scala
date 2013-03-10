@@ -1,18 +1,16 @@
 package view
 import controller.Controller
+import model._
 import scala.swing._
 import scala.swing.Swing.LineBorder
 import scala.swing.event._
-import controller.FeldResize
-import controller.CellChanged
 import javax.swing.ImageIcon
-import controller.GameOver
-import controller.VersuchBeendet
+
 class CellClicked(val row: Int, val column: Int) extends Event
 
 class GUI(controller: Controller) extends Frame {
   var groesse = controller.feld.zellen.length
-  listenTo(controller)
+  listenTo(controller.feld)
   var peopleIcon = new ImageIcon("C:/Users/daryna.ariamnova/Documents/eclipse/workspace/Memospiel/src/images/ControlPictures/People.png")
   var fruitsIcon = new ImageIcon("C:/Users/daryna.ariamnova/Documents/eclipse/workspace/Memospiel/src/images/ControlPictures/fruits.png")
   var fashionIcon = new ImageIcon("C:/Users/daryna.ariamnova/Documents/eclipse/workspace/Memospiel/src/images/ControlPictures/fashion.png")
@@ -66,6 +64,7 @@ class GUI(controller: Controller) extends Frame {
   val spiel8 = new Button { 
     action = Action("Spielgroesse 8") {
       if (groesse == 8) {
+        //make this right here!
         controller.setStatusText("Spielfeld ist schon 8 Zellen gross")
       } else {
         

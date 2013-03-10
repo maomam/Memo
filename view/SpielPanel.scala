@@ -1,11 +1,12 @@
 package view
+
+import model._
 import scala.swing._
 import scala.swing.event._
 import controller.Controller
-import model1.Zelle
-import controller.CellChanged
-import controller.VersuchBeendet
 import scala.swing.Button
+
+
 class BilderPanel (controller: Controller, size: Int) extends GridPanel(size, size) {
   val InitialfarbeSpieler = new Color(200, 200, 255)
   val Schiffgesetzt = new Color(192, 255, 192)
@@ -16,18 +17,18 @@ class BilderPanel (controller: Controller, size: Int) extends GridPanel(size, si
   var bildErraten= false
   var Reihe =0
   var Spalte =0
-  
+  listenTo(controller.feld)
   
   var alleButtons = Array.ofDim[Button](size, size)
   reactions += {
-    case e: VersuchBeendet => {
+    case e: CurrentGuessOver => {
     
 
     }
   }
  def getZelle(reihe: Int, spalte: Int): Zelle = {
 
-    return controller.cell(reihe, spalte)
+    return controller.feld((reihe, spalte))
   }
  
  def button(a: Int, b: Int) = new Button {
@@ -52,10 +53,9 @@ class BilderPanel (controller: Controller, size: Int) extends GridPanel(size, si
 
           }
            }
-    listenTo(controller)
-
   }
-def createButtons {
+
+ def createButtons {
 
     contents.clear()
     background = java.awt.Color.BLACK

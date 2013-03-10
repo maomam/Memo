@@ -2,7 +2,7 @@
 
 import view._
 import controller._
-import model1._
+import model._
 
 object Memospiel {
   val controller = new Controller(new Feld(4))
@@ -14,7 +14,9 @@ def main(args: Array[String]) {
     userGui.visible = true
     userGui.resizable = false
 
-    while ((userTui.readInput(readLine())) == true) {}
+    while ((userTui.readInput(readLine())) == true) {
+      
+    }
 
   }
 }
