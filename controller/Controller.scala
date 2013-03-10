@@ -9,13 +9,13 @@ import javax.swing.JOptionPane
 
 class Controller(var feld: Feld) {
   var statusText = ""
-  var feldGesetzt = false
+  
   var zaehler = 0
 
-  def setFeldGesetzt(gesetzt: Boolean) = { this.feldGesetzt = gesetzt }
+  //def setFeldGesetzt(gesetzt: Boolean) = { this.feldGesetzt = gesetzt }
   def setStatusText(text: String) { this.statusText = text }
   def spielfertig: Boolean = { feld.gameOver}
-  def solve = { feld = feld.solve; statusText = "Spiel beendet";}
+  def solve = { feld.solve; statusText = "Spiel beendet";}
   //def updateFeld(feld: Feld) { this.feld = feld }
 
  
@@ -30,25 +30,13 @@ class Controller(var feld: Feld) {
   def selectCell(cellCoords: (Int,Int)) = 
     feld.tryOpen(cellCoords._1, cellCoords._2)
  
-  def reset = {
-    feld = feld.reset
-    feldGesetzt = false
-    zaehler = 0
-    statusText = "Spiel zurueckgesetzt"
+  def reset(size :Int) = {
+    feld.reset(size)
+     zaehler = 0
+   
   }
 
   
-  def setSize(newSize: Int) = {
-    if (feld.dimension == newSize) {
-      //think if controller should do this
-      setStatusText("Spielfeld ist schon in der benoetigten Groesse")
-    } else {
-    	//should just resize the existing field
-        feld = new Feld(newSize)
-        statusText = "Spielgroesse veraendert"
-    }
-  }
-
-  //move to model publish(new CellChanged)
+ 
 
 }

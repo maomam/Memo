@@ -38,14 +38,14 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
     eingabe match {
       case "l" => controller.solve
       case "r" => {
-        controller.reset
+        controller.reset(size)
         listenTo(controller.feld) //this shouldn't be repeated
         println("Das  Feld wurde zurueckgesetzt")
       }
       // rewrite into single case 
-      case "size 8" => controller.setSize(8);
-      case "size 4" => controller.setSize(4); 
-      case "size 2" => controller.setSize(2); 
+      case "size 8" => controller.reset(8);
+      case "size 4" => controller.reset(4); 
+      case "size 2" => controller.reset(2); 
       case numberString => {
         println (numberString)
         val number = numberString.toInt

@@ -15,7 +15,7 @@ class GUI(controller: Controller) extends Frame {
   var fruitsIcon = new ImageIcon("C:/Users/daryna.ariamnova/Documents/eclipse/workspace/Memospiel/src/images/ControlPictures/fruits.png")
   var fashionIcon = new ImageIcon("C:/Users/daryna.ariamnova/Documents/eclipse/workspace/Memospiel/src/images/ControlPictures/fashion.png")
   var countriesIcon = new ImageIcon("C:/Users/daryna.ariamnova/Documents/eclipse/workspace/Memospiel/src/images/ControlPictures/countries.png")
-  
+
   var statusline = new Label(controller.statusText)
   var cells = new BilderPanel(controller, groesse)
   def UserButtons(groesse: Int): BilderPanel = {
@@ -24,22 +24,22 @@ class GUI(controller: Controller) extends Frame {
   }
   title = "Memospiel"
 
-  val neustarten = new Button { 
+  val neustarten = new Button {
     action = Action("Spiel neu Starten") {
-      controller.reset
+      controller.reset(groesse)
       statusline.text = controller.statusText
-   
+
     }
   }
 
-  val spiel2 = new Button { 
+  val spiel2 = new Button {
     action = Action("Spielgroesse 2") {
       if (groesse == 2) {
         controller.setStatusText("Spielfeld ist schon 2 Zellen gross")
       } else {
         groesse = 2
-        controller.reset
-        newSize(2)
+        controller.reset(2)
+      
 
       }
       statusline.text = controller.statusText
@@ -53,35 +53,32 @@ class GUI(controller: Controller) extends Frame {
       } else {
 
         groesse = 4
-        controller.reset
-        newSize(4)
+        controller.reset(4)
+       
 
       }
-    
+
       statusline.text = controller.statusText
     }
   }
-  val spiel8 = new Button { 
+  val spiel8 = new Button {
     action = Action("Spielgroesse 8") {
       if (groesse == 8) {
         //make this right here!
         controller.setStatusText("Spielfeld ist schon 8 Zellen gross")
       } else {
+
+        groesse = 8
+        controller.reset(8)
         
-          
-          groesse = 8
-          controller.reset
-          newSize(8)
-         
-       
+
       }
       statusline.text = controller.statusText
     }
   }
-  val loesen = new Button { 
+  val loesen = new Button {
     action = Action("Spiel loesen") {
       controller.solve
-      controller.setFeldGesetzt(false)
       statusline.text = controller.statusText
     }
   }
@@ -94,41 +91,41 @@ class GUI(controller: Controller) extends Frame {
     contents += loesen
     contents += statusline
   }
-  val people =new Button {
-    action =Action("People"){
-      
+  val people = new Button {
+    action = Action("People") {
+
     }
     preferredSize_=(new Dimension(120, 60))
     icon = peopleIcon
   }
-  val fruits =new Button {
-    action =Action("Fruits"){
-      
+  val fruits = new Button {
+    action = Action("Fruits") {
+
     }
     preferredSize_=(new Dimension(120, 60))
-    icon= fruitsIcon
+    icon = fruitsIcon
   }
-  val fashion =new Button {
-    action =Action("Fashion"){
-      
+  val fashion = new Button {
+    action = Action("Fashion") {
+
     }
     preferredSize_=(new Dimension(120, 60))
-    icon= fashionIcon
+    icon = fashionIcon
   }
- 
-   val countries =new Button {
-     action =Action("Countries"){
-       
-     }
+
+  val countries = new Button {
+    action = Action("Countries") {
+
+    }
     preferredSize_=(new Dimension(120, 60))
-    icon= countriesIcon
-   }
-   def picturesPanel =new GridPanel(4,1) {
-     contents +=people
-     contents +=fruits
-     contents+=fashion
-     contents+=countries
-   }
+    icon = countriesIcon
+  }
+  def picturesPanel = new GridPanel(4, 1) {
+    contents += people
+    contents += fruits
+    contents += fashion
+    contents += countries
+  }
 
   contents = new BorderPanel {
 
@@ -150,7 +147,7 @@ class GUI(controller: Controller) extends Frame {
 
     case e: CellChanged => redraw
 
-    case GameOver => endGame
+    case  GameOver => endGame
 
   }
 
@@ -158,16 +155,14 @@ class GUI(controller: Controller) extends Frame {
     if (controller.feld.gameOver == true) {
       contents = new BorderPanel {
         add(functionPanel, BorderPanel.Position.North)
-        add(new FlowPanel { 
+        add(new FlowPanel {
         }, BorderPanel.Position.South)
         add(cells, BorderPanel.Position.West)
-        
 
       }
     }
   }
 
- 
   def resize(newSize: Int) = {
     groesse = newSize
     cells = new BilderPanel(controller, newSize)
@@ -176,51 +171,39 @@ class GUI(controller: Controller) extends Frame {
     contents = new BorderPanel {
       add(functionPanel, BorderPanel.Position.South)
       add(picturesPanel, BorderPanel.Position.East)
-      add(new FlowPanel { 
+      add(new FlowPanel {
       }, BorderPanel.Position.North)
       add(cells, BorderPanel.Position.Center)
 
     }
-   
+
   }
 
   def redraw = {
 
     if (controller.feld.gameOver == true) {
-      controller.setFeldGesetzt(false)
-
-     
       contents = new BorderPanel {
         add(functionPanel, BorderPanel.Position.South)
         add(picturesPanel, BorderPanel.Position.East)
-        add(new FlowPanel { 
+        add(new FlowPanel {
         }, BorderPanel.Position.North)
         add(cells, BorderPanel.Position.West)
-       
 
       }
     } else {
       contents = new BorderPanel {
         add(functionPanel, BorderPanel.Position.North)
-        add(new FlowPanel { 
+        add(new FlowPanel {
 
         }, BorderPanel.Position.South)
         add(cells, BorderPanel.Position.West)
-      
+
         cells = new BilderPanel(controller, groesse)
 
       }
     }
 
     repaint()
-
-  }
-
-  def newSize(newSize: Int) {
-    groesse = newSize
-    cells.contents.clear()
-    controller.reset
-    controller.setSize(newSize)
 
   }
 

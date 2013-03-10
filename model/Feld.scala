@@ -15,23 +15,38 @@ case class ThemeChanged(newTheme: Int) extends Event
 
 class Feld(_dimension: Int) extends Publisher {
   require(List(2, 4, 8).contains(_dimension))
-  val dimension = _dimension
-
-  val zellen = {val temp = Array.ofDim[Zelle](dimension, dimension)
+  var dimension = _dimension
+  var anzahlZellen = dimension * dimension - 1
+  var gameIsOver = false
+  var counterGuessed = 0
+  val openCellsSet = scala.collection.mutable.Set[(Int,Int)]()
+  
+  var zellen = {generateCells(dimension)
+  }
+  
+  def generateCells(size:Int): Array[Array[Zelle]] ={
+    val temp = Array.ofDim[Zelle](size,size)
     for (
-      i <- 0 to dimension - 1;
-      j <- 0 to dimension - 1
+      i <- 0 to size - 1;
+      j <- 0 to size - 1
     ) temp(i)(j) = new Zelle(i, j)
 
-    var isThisPictureSet = false
+  
+  
+  	temp
+  }
+  setPictures(dimension)
+  
+  def setPictures(size:Int) :Unit={
+     var isThisPictureSet = false
     for (
-      pairNr <- 1 to (dimension * dimension) / 2;
+      pairNr <- 1 to (size * size) / 2;
       pairMember <- 1 to 2
     ) {
       while (isThisPictureSet == false) {
-        var row = scala.util.Random.nextInt(dimension)
-        var column = scala.util.Random.nextInt(dimension)
-        val Zelle = temp(row)(column)
+        var row = scala.util.Random.nextInt(size)
+        var column = scala.util.Random.nextInt(size)
+        val Zelle = zellen(row)(column)
         if (Zelle.pictureNr == 0) {
           isThisPictureSet = true
           Zelle.setPictureNr(pairNr)
@@ -42,21 +57,33 @@ class Feld(_dimension: Int) extends Publisher {
       }
       isThisPictureSet = false
     }
-  	publish(new FeldResize(dimension))
-  	println ("FeldResize published")
-    temp
   }
 
-  var anzahlZellen = dimension * dimension - 1
-  var gameIsOver = false
-  var counterGuessed = 0
-  val openCellsSet = scala.collection.mutable.Set[(Int,Int)]()
+
   
   def apply(coords: (Int, Int)) = zellen(coords._1)(coords._2)
 
-  def reset: Feld = new Feld(dimension);
+  def reset(fieldSize:Int) = {
+    if (fieldSize ==dimension){
+      for (i <- 0 to dimension - 1) {
+      for (j <- 0 to dimension - 1) {
+        zellen(i)(j).pictureNr=0
 
-  def solve: Feld = {
+      }
+    }
+      setPictures(fieldSize)
+      publish(new CellChanged)
+    }
+    else{
+      zellen =generateCells(fieldSize)
+      setPictures(fieldSize)
+      dimension =fieldSize
+      publish(new FeldResize(dimension))
+    }
+    
+  }
+    
+ def solve: Unit = {
     for (i <- 0 to dimension - 1) {
       for (j <- 0 to dimension - 1) {
         zellen(i)(j).setGuessed
@@ -64,7 +91,7 @@ class Feld(_dimension: Int) extends Publisher {
       }
     }
     publish(new CellChanged)
-    return this
+ 
   }
 
   def isMatch(coords1: (Int, Int), coords2: (Int, Int)): Boolean = {
