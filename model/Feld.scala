@@ -90,6 +90,7 @@ class Feld(_dimension: Int) extends Publisher {
 
       }
     }
+    gameIsOver=true
     publish(new CellChanged)
  
   }
@@ -125,6 +126,7 @@ class Feld(_dimension: Int) extends Publisher {
   }
 
   def gameOver: Boolean = {
+   
     if (dimension == 2) {
       if (counterGuessed == 2) {
         gameIsOver = true

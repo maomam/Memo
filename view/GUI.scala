@@ -181,7 +181,7 @@ class GUI(controller: Controller) extends Frame {
 
   def redraw = {
 
-    if (controller.feld.gameOver == true) {
+    if (controller.feld.gameOver | controller.feld.gameIsOver == true) {
       contents = new BorderPanel {
         add(functionPanel, BorderPanel.Position.South)
         add(picturesPanel, BorderPanel.Position.East)
