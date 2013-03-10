@@ -11,6 +11,7 @@ case class CellChanged extends Event
 case class CurrentGuessOver(erfolg: Boolean) extends Event
 
 case class FeldResize(newSize: Int) extends Event
+case class ThemeChanged(newTheme: Int) extends Event
 
 class Feld(_dimension: Int) extends Publisher {
   require(List(2, 4, 8).contains(_dimension))
