@@ -116,39 +116,29 @@ class Feld(_dimension: Int) extends Publisher {
   def tryOpen(row: Int, col: Int) = {
     if (!openCellsSet.contains((row, col))) {
       val openCellsCount = openCellsSet.size
-      if (openCellsCount == 2) closeOpenCells
+      if (openCellsCount == 2){
+         closeOpenCells
+         publish(new CellChanged())
+      }
       if (openCellsCount == 1) {
         openCellsSet.add((row, col))
         if (isMatch(openCellsSet.head,(row,col)))
           publish(new CellChanged()) //Correct event?
       }
+      else{
+        openCellsSet.add((row, col))
+        getCell(row, col).setOpen(true)
+        publish(new CellChanged())
+      }
     }
   }
 
   def gameOver: Boolean = {
-   
-    if (dimension == 2) {
-      if (counterGuessed == 2) {
+      if (counterGuessed == (dimension*dimension)/2) {
         gameIsOver = true
         return gameIsOver
       }
-    }
-
-    if (dimension == 4) {
-      if (counterGuessed == 8) {
-        gameIsOver = true
-        return gameIsOver
-      }
-
-    }
-    if (dimension == 8) {
-      if (counterGuessed == 32) {
-        gameIsOver = true
-        return gameIsOver
-      }
-
-    }
-    return false
+     return false
   }
 
   def getCell(r: Int, c: Int) = zellen(r)(c)

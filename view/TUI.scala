@@ -18,10 +18,10 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
   		"q - Spiel verlassen,\n" +
   		"l - Spiel lösen und beenden,\n" +
   		"r - Spielfeld zurücksetzen,\n" +
-  		"size <s> - Groesse dies Spielfelds veraendern (2,4 oder 8 eingeben), " +
+  		"size <s> - Groesse dies Spielfelds veraendern (2,4 oder 8 eingeben),\n " +
   		"<x> - Zelle mit der Nummer <x> öffnen")
 
-  var size = controller.feld.zellen.length
+ var size = controller.feld.zellen.length
  def cellNumberToCoords(number:Int): (Int, Int) = {
     val fieldD= controller.feld.dimension
     ((number - 1) / fieldD, (number - 1) % fieldD)
@@ -35,11 +35,11 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
   
   
   def readInput(eingabe: String) = {
+    var continue = true
     eingabe match {
       case "l" => controller.solve
       case "r" => {
         controller.reset(size)
-        listenTo(controller.feld) //this shouldn't be repeated
         println("Das  Feld wurde zurueckgesetzt")
       }
       // rewrite into single case 
@@ -47,7 +47,6 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
       case "size 4" => controller.reset(4); 
       case "size 2" => controller.reset(2); 
       case numberString => {
-        println (numberString)
         val number = numberString.toInt
         val fieldDim = controller.feld.dimension
         if (number >= 1 && number <= fieldDim*fieldDim){
@@ -55,5 +54,6 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
         }
       }
     }
+    continue
   }
 }

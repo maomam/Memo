@@ -39,9 +39,7 @@ class GUI(controller: Controller) extends Frame {
       } else {
         groesse = 2
         controller.reset(2)
-      
-
-      }
+       }
       statusline.text = controller.statusText
     }
   }
@@ -193,6 +191,7 @@ class GUI(controller: Controller) extends Frame {
     } else {
       contents = new BorderPanel {
         add(functionPanel, BorderPanel.Position.North)
+        add(picturesPanel, BorderPanel.Position.East)
         add(new FlowPanel {
 
         }, BorderPanel.Position.South)
