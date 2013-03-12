@@ -125,7 +125,7 @@ class Feld(_dimension: Int) extends Publisher {
         if (isMatch(openCellsSet.head,(row,col)))
           publish(new CellChanged()) //Correct event?
       }
-      else{
+      if(openCellsCount==0){
         openCellsSet.add((row, col))
         getCell(row, col).setOpen(true)
         publish(new CellChanged())
