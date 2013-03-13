@@ -8,18 +8,16 @@ import scala.swing.Button
 
 
 class BilderPanel (controller: Controller, size: Int) extends GridPanel(size, size) {
-  val InitialfarbeSpieler = new Color(200, 200, 255)
-  val Schiffgesetzt = new Color(192, 255, 192)
-  val Schiffgetroffen = new Color(190, 245, 170)
-  val SchiffNichtgetroffen = new Color(150, 160, 162)
+  val InitialColour = new Color(200, 200, 255)
  
-  var spielSize = size
-  var bildErraten= false
-  var Reihe =0
-  var Spalte =0
+ 
+  var gameSize = size
+  var cellGuessed= false
+  var Row =0
+  var Column =0
   listenTo(controller.feld)
   
-  var alleButtons = Array.ofDim[Button](size, size)
+  var allButtons = Array.ofDim[Button](size, size)
   reactions += {
     case e: CurrentGuessOver => {
     
@@ -32,18 +30,18 @@ class BilderPanel (controller: Controller, size: Int) extends GridPanel(size, si
   }
  
  def button(a: Int, b: Int) = new Button {
-    Reihe = a
-    Spalte = b
+    Row = a
+    Column = b
     preferredSize = new Dimension(60, 60)
 
-    background = java.awt.Color.GRAY
+    background = java.awt.Color.WHITE
 
     reactions += {
       case e: CellChanged =>
         setBackground
       case ButtonClicked(buttons) =>
 
-         if (bildErraten == true) {
+         if (cellGuessed == true) {
             background = java.awt.Color.GREEN
                 
             setBackground
@@ -60,12 +58,12 @@ class BilderPanel (controller: Controller, size: Int) extends GridPanel(size, si
     contents.clear()
     background = java.awt.Color.BLACK
 
-    for (m <- 0 to (alleButtons.length - 1)) {
-      for (n <- 0 to (alleButtons.length - 1)) {
+    for (m <- 0 to (allButtons.length - 1)) {
+      for (n <- 0 to (allButtons.length - 1)) {
 
         var buttons = button(m, n)
 
-        alleButtons(m)(n) = buttons
+        allButtons(m)(n) = buttons
         contents += buttons
 
       }
@@ -75,16 +73,16 @@ class BilderPanel (controller: Controller, size: Int) extends GridPanel(size, si
   }
   createButtons
     def setSize(newSize: Int) = {
-    alleButtons = Array.ofDim[Button](newSize, newSize)
-    spielSize = newSize
+    allButtons = Array.ofDim[Button](newSize, newSize)
+    gameSize = newSize
 
-    spielSize = newSize
+    gameSize = newSize
 
   }
   def redraw = {
 
     contents.clear()
-    alleButtons = Array.ofDim[Button](spielSize, spielSize)
+    allButtons = Array.ofDim[Button](gameSize, gameSize)
     createButtons
   
     repaint
@@ -93,33 +91,30 @@ class BilderPanel (controller: Controller, size: Int) extends GridPanel(size, si
   }
   def setAlleButtonSize(anzahl: Int) = {
 
-    alleButtons = Array.ofDim[Button](anzahl, anzahl)
+    allButtons = Array.ofDim[Button](anzahl, anzahl)
     createButtons
 
   }
-  def bildersetzen{
-    
-   // controller.setPictures
-  }
+ 
  def setBackground = {
-    while (alleButtons.length != controller.feld.zellen.length) {
+    while (allButtons.length != controller.feld.zellen.length) {
       setAlleButtonSize(controller.feld.zellen.length)
     }
 
-    for (k <- 0 to (alleButtons.length - 1)) {
-      for (l <- 0 to (alleButtons.length - 1)) {
+    for (k <- 0 to (allButtons.length - 1)) {
+      for (l <- 0 to (allButtons.length - 1)) {
 
         if (getZelle(k, l).getGuessed == true) {
           if (getZelle(k, l).getGuessed == true) {
-            alleButtons(k)(l).background = java.awt.Color.RED
+            allButtons(k)(l).background = java.awt.Color.RED
           } else {
-            alleButtons(k)(l).background = java.awt.Color.GREEN
+            allButtons(k)(l).background = java.awt.Color.GREEN
           }
         } else {
           if (getZelle(k, l).guessed == true) {
-            alleButtons(k)(l).background = java.awt.Color.BLACK
+            allButtons(k)(l).background = java.awt.Color.BLACK
           } else {
-            alleButtons(k)(l).background = java.awt.Color.GRAY
+            allButtons(k)(l).background = java.awt.Color.GRAY
           }
 
         }

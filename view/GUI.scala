@@ -24,7 +24,7 @@ class GUI(controller: Controller) extends Frame {
   }
   title = "Memospiel"
 
-  val neustarten = new Button {
+  val resetGame = new Button {
     action = Action("Spiel neu Starten") {
       controller.reset(groesse)
       statusline.text = controller.statusText
@@ -82,7 +82,7 @@ class GUI(controller: Controller) extends Frame {
   }
 
   def functionPanel = new FlowPanel {
-    contents += neustarten
+    contents += resetGame
     contents += spiel2
     contents += spiel4
     contents += spiel8

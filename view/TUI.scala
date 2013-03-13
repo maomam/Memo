@@ -37,7 +37,8 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
   def readInput(eingabe: String) = {
     var continue = true
     eingabe match {
-      case "l" => controller.solve
+      case "l" => {controller.solve; continue=false;}
+      case "q" => continue =false
       case "r" => {
         controller.reset(size)
         println("Das  Feld wurde zurueckgesetzt")
@@ -52,7 +53,9 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
         if (number >= 1 && number <= fieldDim*fieldDim){
           controller.selectCell(cellNumberToCoords(number)) 
         }
+        else{ println("Falsche Eingabe")}
       }
+      
     }
     continue
   }

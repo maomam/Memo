@@ -118,11 +118,15 @@ class Feld(_dimension: Int) extends Publisher {
       val openCellsCount = openCellsSet.size
       if (openCellsCount == 2){
          closeOpenCells
+         openCellsSet.add((row, col))
          publish(new CellChanged())
       }
       if (openCellsCount == 1) {
+        getCell(row, col).setOpen(true)
         openCellsSet.add((row, col))
-        if (isMatch(openCellsSet.head,(row,col)))
+         if (isMatch(openCellsSet.head,(row,col))){
+           closeOpenCells
+         }
           publish(new CellChanged()) //Correct event?
       }
       if(openCellsCount==0){
