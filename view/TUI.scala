@@ -29,7 +29,7 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
   
   def printTui = {
     println("DAS SPIELFELD:")
-    println(controller.feld.toString())
+    println(fieldToString)
     
   }
   
@@ -58,5 +58,28 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
       
     }
     continue
+  }
+   def fieldToString= {
+     val feld =controller.feld
+     val dim =feld.dimension
+    val lineseparator = ("+--" + ("--" * (dim / 2))) * dim + "+\n"
+    val line = ("|" + (" " * (dim / 2)) + ("xx" + (" " * (dim / 2)))) * dim + "|\n"
+    var box = "\n" + (lineseparator + (line)) * dim + lineseparator
+    var n = 1
+    for (reihe <- 0 to dim - 1) {
+      for (spalte <- 0 to dim - 1) {
+
+        if (feld(reihe, spalte).getGuessed == false) {
+          (box = box.replaceFirst("xx", feld(reihe, spalte).open.toString()))
+          (box = box.replaceFirst("false", n.toString.padTo(2," ").mkString))
+          (box = box.replaceFirst("true", "##"))
+        } else {
+          (box = box.replaceFirst("xx", "**"))
+
+        }
+       n+=1
+      }
+    }
+    box
   }
 }

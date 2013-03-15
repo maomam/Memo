@@ -4,22 +4,20 @@ import scala.swing.Publisher
 import scala.swing.event.Event
 
 
-case object GameOver extends Event
-
+case class GameOver extends Event
 case class CellChanged extends Event
-
 case class CurrentGuessOver(erfolg: Boolean) extends Event
-
 case class FeldResize(newSize: Int) extends Event
 case class ThemeChanged(newTheme: Int) extends Event
 
-class Feld(_dimension: Int) extends Publisher {
-  require(List(2, 4, 8).contains(_dimension))
-  var dimension = _dimension
+class Feld(var dimension: Int, var currentTheme: Int) extends Publisher {
+  require(List(2, 4, 8).contains(dimension))
+  require(List(1, 2, 3, 4).contains(currentTheme))
+ 
   var anzahlZellen = dimension * dimension - 1
   var gameIsOver = false
   var counterGuessed = 0
-  val openCellsSet = scala.collection.mutable.Set[(Int,Int)]()
+  val tempOpenCellsSet = scala.collection.mutable.Set[(Int,Int)]()
   
   var zellen = {generateCells(dimension)
   }
@@ -95,42 +93,48 @@ class Feld(_dimension: Int) extends Publisher {
  
   }
 
-  def isMatch(coords1: (Int, Int), coords2: (Int, Int)): Boolean = {
-    var result: Boolean = false
-    if (!this(coords1).getGuessed && !this(coords2).getGuessed)
-      if (this(coords1).pictureNr == this(coords2).pictureNr) {
-        this(coords1).setGuessed
-        this(coords2).setGuessed
-        result = true
-        counterGuessed = counterGuessed + 1
-      }
-    result
+  def isMatch(coords1: (Int, Int), coords2: (Int, Int)): Boolean = 
+   !this(coords1).getGuessed && !this(coords2).getGuessed &&
+        (this(coords1).pictureNr == this(coords2).pictureNr) 
+        
+      
+  
+  def openCellsToString(s: scala.collection.mutable.Set [(Int, Int)])={
+    s.foreach (x=> println(x))
   }
 
   def closeOpenCells: Unit =
     {
-      openCellsSet.foreach(coords => this(coords).open = false)
-      openCellsSet.clear
+      tempOpenCellsSet.foreach(coords => this(coords).open = false)
+      tempOpenCellsSet.clear
     }
 
   def tryOpen(row: Int, col: Int) = {
-    if (!openCellsSet.contains((row, col))) {
-      val openCellsCount = openCellsSet.size
+    openCellsToString(tempOpenCellsSet)
+    if (!tempOpenCellsSet.contains((row, col))&& !this(row,col).getGuessed) {
+      val openCellsCount = tempOpenCellsSet.size
       if (openCellsCount == 2){
          closeOpenCells
-         openCellsSet.add((row, col))
+         tempOpenCellsSet.add((row, col))
+         getCell(row, col).setOpen(true)
          publish(new CellChanged())
       }
       if (openCellsCount == 1) {
+        //it should check whether it is right match to decide whether to close it. 
         getCell(row, col).setOpen(true)
-        openCellsSet.add((row, col))
-         if (isMatch(openCellsSet.head,(row,col))){
-           closeOpenCells
-         }
+        
+        val openCell = tempOpenCellsSet.head
+        if(isMatch(openCell,(row,col))){
+          this(row, col).setGuessed
+          this(openCell).setGuessed
+        counterGuessed = counterGuessed + 1
+          tempOpenCellsSet.clear
+        }
+         tempOpenCellsSet.add((row, col))
           publish(new CellChanged()) //Correct event?
       }
       if(openCellsCount==0){
-        openCellsSet.add((row, col))
+        tempOpenCellsSet.add((row, col))
         getCell(row, col).setOpen(true)
         publish(new CellChanged())
       }

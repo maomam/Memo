@@ -140,13 +140,9 @@ class GUI(controller: Controller) extends Frame {
   }
 
   reactions += {
-
     case e: FeldResize => resize(e.newSize)
-
     case e: CellChanged => redraw
-
-    case  GameOver => endGame
-
+    case e: GameOver => endGame
   }
 
   def endGame = {

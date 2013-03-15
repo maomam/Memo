@@ -22,7 +22,7 @@ def setGuessed = {
  
   def getReihe: Int = reihe
   def getSpalte: Int = spalte
-  def getOffen: Boolean = open
+  def getOpen: Boolean = open
   def getGuessed: Boolean = guessed
   
 
