@@ -11,7 +11,7 @@ case class FeldResize(newSize: Int) extends Event
 case class ThemeChanged(newTheme: Int) extends Event
 
 class Feld(var dimension: Int, var currentTheme: Int) extends Publisher {
-  require(List(2, 4, 8).contains(dimension))
+  require(List(6, 4, 8).contains(dimension))
   require(List(1, 2, 3, 4).contains(currentTheme))
  
   var anzahlZellen = dimension * dimension - 1
@@ -57,7 +57,10 @@ class Feld(var dimension: Int, var currentTheme: Int) extends Publisher {
     }
   }
 
-
+ def setTheme (newTheme:Int)={
+   currentTheme=newTheme
+   publish(new ThemeChanged(newTheme))
+ }
   
   def apply(coords: (Int, Int)) = zellen(coords._1)(coords._2)
 
@@ -139,14 +142,17 @@ class Feld(var dimension: Int, var currentTheme: Int) extends Publisher {
         publish(new CellChanged())
       }
     }
+    if(gameOver){
+      publish(new GameOver)
+    }
   }
 
   def gameOver: Boolean = {
       if (counterGuessed == (dimension*dimension)/2) {
         gameIsOver = true
-        return gameIsOver
+         gameIsOver
       }
-     return false
+     gameIsOver
   }
 
   def getCell(r: Int, c: Int) = zellen(r)(c)

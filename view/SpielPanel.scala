@@ -73,16 +73,9 @@ class BilderPanel(controller: Controller, size: Int) extends GridPanel(size, siz
       for (c <- 0 to (allButtons.length - 1)) {
 
         if (controller.feld(r, c).getGuessed ) {
-          //if (controller.feld(r, c).getGuessed) {
-            allButtons(r)(c).background = java.awt.Color.GRAY
-          /*} else {
-            allButtons(r)(c).background = java.awt.Color.GREEN
-          }*/
-        } else {
-          /*if (controller.feld(r, c).guessed == true) {
-            allButtons(r)(c).background = java.awt.Color.BLACK
-          } else {*/
-          if(controller.feld(r, c).getOpen)
+         allButtons(r)(c).background = java.awt.Color.GRAY
+          } else {
+           if(controller.feld(r, c).getOpen)
             allButtons(r)(c).background = java.awt.Color.RED
             else {allButtons(r)(c).background = java.awt.Color.WHITE}
         }

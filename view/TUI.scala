@@ -12,6 +12,8 @@ listenTo(controller.feld)
   reactions += {
     case e: FeldResize => printTui
     case e: CellChanged => printTui
+    case e: GameOver =>
+    case e: ThemeChanged =>
   }
 
 println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
@@ -46,7 +48,7 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
       // rewrite into single case 
       case "size 8" => controller.reset(8);
       case "size 4" => controller.reset(4); 
-      case "size 2" => controller.reset(2); 
+      case "size 6" => controller.reset(6); 
       case numberString => {
         val number = numberString.toInt
         val fieldDim = controller.feld.dimension

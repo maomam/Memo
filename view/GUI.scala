@@ -23,6 +23,12 @@ class GUI(controller: Controller) extends Frame {
     cells
   }
   title = "Memospiel"
+    reactions += {
+    case e: FeldResize => resize(e.newSize)
+    case e: CellChanged => redraw
+    case e: GameOver => endGame
+    case e: ThemeChanged =>
+  }
 
   val resetGame = new Button {
     action = Action("Spiel neu Starten") {
@@ -32,13 +38,13 @@ class GUI(controller: Controller) extends Frame {
     }
   }
 
-  val spiel2 = new Button {
-    action = Action("Spielgroesse 2") {
-      if (groesse == 2) {
+  val spiel6 = new Button {
+    action = Action("Spielgroesse 6") {
+      if (groesse == 6) {
         controller.setStatusText("Spielfeld ist schon 2 Zellen gross")
       } else {
-        groesse = 2
-        controller.reset(2)
+        groesse = 6
+        controller.reset(6)
        }
       statusline.text = controller.statusText
     }
@@ -83,7 +89,7 @@ class GUI(controller: Controller) extends Frame {
 
   def functionPanel = new FlowPanel {
     contents += resetGame
-    contents += spiel2
+    contents += spiel6
     contents += spiel4
     contents += spiel8
     contents += loesen
@@ -91,21 +97,21 @@ class GUI(controller: Controller) extends Frame {
   }
   val people = new Button {
     action = Action("People") {
-
+    controller.changeTheme(2)
     }
     preferredSize_=(new Dimension(120, 60))
     icon = peopleIcon
   }
   val fruits = new Button {
     action = Action("Fruits") {
-
+    controller.changeTheme(1)
     }
     preferredSize_=(new Dimension(120, 60))
     icon = fruitsIcon
   }
   val fashion = new Button {
     action = Action("Fashion") {
-
+    controller.changeTheme(3)
     }
     preferredSize_=(new Dimension(120, 60))
     icon = fashionIcon
@@ -113,7 +119,7 @@ class GUI(controller: Controller) extends Frame {
 
   val countries = new Button {
     action = Action("Countries") {
-
+    controller.changeTheme(4)
     }
     preferredSize_=(new Dimension(120, 60))
     icon = countriesIcon
@@ -139,16 +145,13 @@ class GUI(controller: Controller) extends Frame {
 
   }
 
-  reactions += {
-    case e: FeldResize => resize(e.newSize)
-    case e: CellChanged => redraw
-    case e: GameOver => endGame
-  }
+  
 
   def endGame = {
     if (controller.feld.gameOver == true) {
       contents = new BorderPanel {
-        add(functionPanel, BorderPanel.Position.North)
+        add(functionPanel, BorderPanel.Position.South)
+        add(picturesPanel, BorderPanel.Position.East)
         add(new FlowPanel {
         }, BorderPanel.Position.South)
         add(cells, BorderPanel.Position.West)
@@ -167,7 +170,7 @@ class GUI(controller: Controller) extends Frame {
       add(picturesPanel, BorderPanel.Position.East)
       add(new FlowPanel {
       }, BorderPanel.Position.North)
-      add(cells, BorderPanel.Position.Center)
+      add(cells, BorderPanel.Position.West)
 
     }
 
@@ -175,7 +178,7 @@ class GUI(controller: Controller) extends Frame {
 
   def redraw = {
 
-    if (controller.feld.gameOver | controller.feld.gameIsOver == true) {
+   /* if (controller.feld.gameOver | controller.feld.gameIsOver == true) {
       contents = new BorderPanel {
         add(functionPanel, BorderPanel.Position.South)
         add(picturesPanel, BorderPanel.Position.East)
@@ -184,18 +187,18 @@ class GUI(controller: Controller) extends Frame {
         add(cells, BorderPanel.Position.West)
 
       }
-    } else {
+    } else {*/
       contents = new BorderPanel {
-        add(functionPanel, BorderPanel.Position.North)
+        add(functionPanel, BorderPanel.Position.South)
         add(picturesPanel, BorderPanel.Position.East)
         add(new FlowPanel {
 
-        }, BorderPanel.Position.South)
+        }, BorderPanel.Position.North)
         add(cells, BorderPanel.Position.West)
 
         cells = new BilderPanel(controller, groesse)
 
-      }
+      
     }
 
     repaint()
