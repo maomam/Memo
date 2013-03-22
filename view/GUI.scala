@@ -25,7 +25,7 @@ class GUI(controller: Controller) extends Frame {
   title = "Memospiel"
     reactions += {
     case e: FeldResize => resize(e.newSize)
-    case e: CellChanged => redraw
+    case e: FieldChanged => redraw
     case e: GameOver => endGame
     case e: ThemeChanged =>
   }
@@ -37,6 +37,7 @@ class GUI(controller: Controller) extends Frame {
 
     }
   }
+  
 
   val spiel6 = new Button {
     action = Action("Spielgroesse 6") {
@@ -97,21 +98,21 @@ class GUI(controller: Controller) extends Frame {
   }
   val people = new Button {
     action = Action("People") {
-    controller.changeTheme(2)
+    controller.changeTheme(Theme.people)
     }
     preferredSize_=(new Dimension(120, 60))
     icon = peopleIcon
   }
   val fruits = new Button {
     action = Action("Fruits") {
-    controller.changeTheme(1)
+    controller.changeTheme(Theme.fruits)
     }
     preferredSize_=(new Dimension(120, 60))
     icon = fruitsIcon
   }
   val fashion = new Button {
     action = Action("Fashion") {
-    controller.changeTheme(3)
+    controller.changeTheme(Theme.fashion)
     }
     preferredSize_=(new Dimension(120, 60))
     icon = fashionIcon
@@ -119,7 +120,7 @@ class GUI(controller: Controller) extends Frame {
 
   val countries = new Button {
     action = Action("Countries") {
-    controller.changeTheme(4)
+    controller.changeTheme(Theme.countries)
     }
     preferredSize_=(new Dimension(120, 60))
     icon = countriesIcon

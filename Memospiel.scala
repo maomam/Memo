@@ -5,7 +5,7 @@ import controller._
 import model._
 
 object Memospiel {
-  val controller = new Controller(new Feld(4,1))
+  val controller = new Controller(new Feld(4,Theme.fruits))
   val userTui = new TUI(controller)
   val userGui = new GUI(controller)
 def main(args: Array[String]) {

@@ -2,22 +2,25 @@ package model
 
 import scala.swing.Publisher
 import scala.swing.event.Event
-
+import model._
 
 case class GameOver extends Event
-case class CellChanged extends Event
-case class CurrentGuessOver(erfolg: Boolean) extends Event
+case class FieldChanged extends Event
+case class CellsGuessed(guessedCells: List[Coordinates]) extends Event
+case class CellsClosed(cellsToClose: List [Coordinates])  extends Event
+case class CellOpened(cellToOpen: Coordinates) extends Event
 case class FeldResize(newSize: Int) extends Event
-case class ThemeChanged(newTheme: Int) extends Event
+case class ThemeChanged(newTheme: Theme.Value) extends Event
+// TODO: add new events
 
-class Feld(var dimension: Int, var currentTheme: Int) extends Publisher {
+class Feld(var dimension: Int, var currentTheme: Theme.Value) extends Publisher {//TODO: make Theme an enum
   require(List(6, 4, 8).contains(dimension))
-  require(List(1, 2, 3, 4).contains(currentTheme))
+ 
  
   var anzahlZellen = dimension * dimension - 1
   var gameIsOver = false
   var counterGuessed = 0
-  val tempOpenCellsSet = scala.collection.mutable.Set[(Int,Int)]()
+  val tempOpenCellsSet = scala.collection.mutable.Set[Coordinates]()
   
   var zellen = {generateCells(dimension)
   }
@@ -57,12 +60,12 @@ class Feld(var dimension: Int, var currentTheme: Int) extends Publisher {
     }
   }
 
- def setTheme (newTheme:Int)={
+ def setTheme (newTheme:Theme.Value)={
    currentTheme=newTheme
    publish(new ThemeChanged(newTheme))
  }
   
-  def apply(coords: (Int, Int)) = zellen(coords._1)(coords._2)
+  def apply(coords: Coordinates) = zellen(coords._1)(coords._2)
 
   def reset(fieldSize:Int) = {
     if (fieldSize ==dimension){
@@ -73,7 +76,7 @@ class Feld(var dimension: Int, var currentTheme: Int) extends Publisher {
       }
     }
       setPictures(fieldSize)
-      publish(new CellChanged)
+      publish(new FieldChanged)
     }
     else{
       zellen =generateCells(fieldSize)
@@ -92,7 +95,7 @@ class Feld(var dimension: Int, var currentTheme: Int) extends Publisher {
       }
     }
     gameIsOver=true
-    publish(new CellChanged)
+    publish(new FieldChanged)
  
   }
 
@@ -106,7 +109,7 @@ class Feld(var dimension: Int, var currentTheme: Int) extends Publisher {
     s.foreach (x=> println(x))
   }
 
-  def closeOpenCells: Unit =
+  def closeOpenCells(): Unit =
     {
       tempOpenCellsSet.foreach(coords => this(coords).open = false)
       tempOpenCellsSet.clear
@@ -116,11 +119,12 @@ class Feld(var dimension: Int, var currentTheme: Int) extends Publisher {
     openCellsToString(tempOpenCellsSet)
     if (!tempOpenCellsSet.contains((row, col))&& !this(row,col).getGuessed) {
       val openCellsCount = tempOpenCellsSet.size
-      if (openCellsCount == 2){
-         closeOpenCells
+      if (openCellsCount == 2){ 
+         closeOpenCells()
+         publish(new CellsClosed(tempOpenCellsSet.toList))
          tempOpenCellsSet.add((row, col))
-         getCell(row, col).setOpen(true)
-         publish(new CellChanged())
+         this(row, col).setOpen(true)
+         publish(new CellOpened((row,col)))
       }
       if (openCellsCount == 1) {
         //it should check whether it is right match to decide whether to close it. 
@@ -132,14 +136,15 @@ class Feld(var dimension: Int, var currentTheme: Int) extends Publisher {
           this(openCell).setGuessed
         counterGuessed = counterGuessed + 1
           tempOpenCellsSet.clear
+          publish(new CellsGuessed(openCell::List((row,col))))
         }
          tempOpenCellsSet.add((row, col))
-          publish(new CellChanged()) //Correct event?
+         publish(new CellOpened((row, col)))
       }
       if(openCellsCount==0){
-        tempOpenCellsSet.add((row, col))
-        getCell(row, col).setOpen(true)
-        publish(new CellChanged())
+         tempOpenCellsSet.add((row, col))
+         getCell(row, col).setOpen(true)
+         publish(new CellOpened((row, col)))
       }
     }
     if(gameOver){

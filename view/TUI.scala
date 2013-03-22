@@ -11,7 +11,7 @@ listenTo(controller.feld)
  printTui
   reactions += {
     case e: FeldResize => printTui
-    case e: CellChanged => printTui
+    case e: FieldChanged => printTui
     case e: GameOver =>
     case e: ThemeChanged =>
   }

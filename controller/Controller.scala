@@ -3,6 +3,7 @@ package controller
 import scala.math.sqrt
 import scala.util.Random
 import model.Feld
+import model.Theme
 import util._
 //import model1.Zelle
 import javax.swing.JOptionPane
@@ -14,10 +15,8 @@ class Controller(var feld: Feld) {
   def spielfertig: Boolean = { feld.gameOver}
   def solve = { feld.solve; statusText = "Spiel beendet";}
   
-
  
-  
- def changeTheme(newTheme :Int)={
+ def changeTheme(newTheme: Theme.Value)={
    if(feld.currentTheme != newTheme){
      feld.setTheme(newTheme)
    }

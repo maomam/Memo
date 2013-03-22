@@ -1,5 +1,6 @@
 package view
 
+import model.model.Coordinates
 import model._
 import scala.swing._
 import scala.swing.event._
@@ -17,14 +18,29 @@ class BilderPanel(controller: Controller, size: Int) extends GridPanel(size, siz
   listenTo(controller.feld)
   createButtons
 
+  private def hideButtons(c: List[Coordinates]): Unit =
+    c.foreach(x => allButtons(x._1)(x._2).visible = false)
   
+  //TODO: private def closeButtons(c: List[Coordinates]): Unit
+    // c.foreach(x => allButtons(x._1)(x._2).setIcon(closedIcon))
+    
+ //TODO: private def openButton(c: Coordinates): Unit
+    //allButtons(c._1)(c._2).setIcon(realPictureIcon)
+    
   reactions += {
-    case e: CurrentGuessOver => {
+    case e: CellsGuessed => {
+      //TODO: sleep(1000)
+      hideButtons(e.guessedCells)
     }
-     case e: CellChanged =>
-        setBackground
-     case e: GameOver =>{
-       
+    case e: CellsClosed => {
+      //closeButtons(e.cellsToClose)
+    }
+    case e: CellOpened => 
+      //openButton(e.cellToOpen)
+    
+    case e: FieldChanged => setBackground //FIXME: redraw the panel 
+    case e: GameOver =>{
+      //TODO: Show all buttons with real pictures 
      }
        
   }
@@ -68,6 +84,7 @@ class BilderPanel(controller: Controller, size: Int) extends GridPanel(size, siz
     if (allButtons.length != controller.feld.zellen.length) {
       setAlleButtonSize(controller.feld.zellen.length)
     }
+    
 
     for (r <- 0 to (allButtons.length - 1)) {
       for (c <- 0 to (allButtons.length - 1)) {
