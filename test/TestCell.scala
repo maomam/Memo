@@ -10,11 +10,11 @@ class TestCell extends SpecificationWithJUnit{
     val zelle = new Zelle(0,0)
     
     "not be set" in{
-      var guessed = zelle.getGuessed
+      var guessed = zelle.guessed
       guessed must be_==(false)
     }
     "not be open" in{
-      var open = zelle.getOpen
+      var open = zelle.open
       open must be_==(false)
     }
   }

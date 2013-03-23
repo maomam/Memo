@@ -3,6 +3,7 @@
 import view._
 import controller._
 import model._
+import util.Theme
 
 object Memospiel {
   val controller = new Controller(new Feld(4,Theme.fruits))

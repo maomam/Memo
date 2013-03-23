@@ -3,9 +3,11 @@ package model
 import scala.swing.Publisher
 import scala.swing.event.Event
 import model._
+import util.Theme
 
 case class GameOver extends Event
-case class FieldChanged extends Event
+case class FieldSolved extends Event
+case class FieldReset extends Event
 case class CellsGuessed(guessedCells: List[Coordinates]) extends Event
 case class CellsClosed(cellsToClose: List [Coordinates])  extends Event
 case class CellOpened(cellToOpen: Coordinates) extends Event
@@ -13,7 +15,7 @@ case class FeldResize(newSize: Int) extends Event
 case class ThemeChanged(newTheme: Theme.Value) extends Event
 // TODO: add new events
 
-class Feld(var dimension: Int, var currentTheme: Theme.Value) extends Publisher {//TODO: make Theme an enum
+class Feld(var dimension: Int, var currentTheme: Theme.Value) extends Publisher {
   require(List(6, 4, 8).contains(dimension))
  
  
@@ -50,7 +52,7 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value) extends Publisher 
         val Zelle = zellen(row)(column)
         if (Zelle.pictureNr == 0) {
           isThisPictureSet = true
-          Zelle.setPictureNr(pairNr)
+          Zelle.pictureNr_(pairNr)
 
         } else {
           isThisPictureSet = false
@@ -71,12 +73,12 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value) extends Publisher 
     if (fieldSize ==dimension){
       for (i <- 0 to dimension - 1) {
       for (j <- 0 to dimension - 1) {
-        zellen(i)(j).pictureNr=0
+        zellen(i)(j).pictureNr_(0)
 
       }
     }
       setPictures(fieldSize)
-      publish(new FieldChanged)
+      publish(new FieldReset)
     }
     else{
       zellen =generateCells(fieldSize)
@@ -91,16 +93,15 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value) extends Publisher 
     for (i <- 0 to dimension - 1) {
       for (j <- 0 to dimension - 1) {
         zellen(i)(j).setGuessed
-
       }
     }
     gameIsOver=true
-    publish(new FieldChanged)
+    publish(new FieldSolved)
  
   }
 
   def isMatch(coords1: (Int, Int), coords2: (Int, Int)): Boolean = 
-   !this(coords1).getGuessed && !this(coords2).getGuessed &&
+   !this(coords1).guessed && !this(coords2).guessed &&
         (this(coords1).pictureNr == this(coords2).pictureNr) 
         
       
@@ -111,24 +112,24 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value) extends Publisher 
 
   def closeOpenCells(): Unit =
     {
-      tempOpenCellsSet.foreach(coords => this(coords).open = false)
+      tempOpenCellsSet.foreach(coords => this(coords).open_(false))
       tempOpenCellsSet.clear
     }
 
   def tryOpen(row: Int, col: Int) = {
     openCellsToString(tempOpenCellsSet)
-    if (!tempOpenCellsSet.contains((row, col))&& !this(row,col).getGuessed) {
+    if (!tempOpenCellsSet.contains((row, col))&& !this(row,col).guessed) {
       val openCellsCount = tempOpenCellsSet.size
       if (openCellsCount == 2){ 
          closeOpenCells()
          publish(new CellsClosed(tempOpenCellsSet.toList))
          tempOpenCellsSet.add((row, col))
-         this(row, col).setOpen(true)
+         this(row, col).open_(true)
          publish(new CellOpened((row,col)))
       }
       if (openCellsCount == 1) {
         //it should check whether it is right match to decide whether to close it. 
-        getCell(row, col).setOpen(true)
+        getCell(row, col).open_(true)
         
         val openCell = tempOpenCellsSet.head
         if(isMatch(openCell,(row,col))){
@@ -143,7 +144,7 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value) extends Publisher 
       }
       if(openCellsCount==0){
          tempOpenCellsSet.add((row, col))
-         getCell(row, col).setOpen(true)
+         getCell(row, col).open_(true)
          publish(new CellOpened((row, col)))
       }
     }
@@ -176,26 +177,5 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value) extends Publisher 
     box
   }*/
 
-  override def toString = {
-    val lineseparator = ("+-" + ("--" * (dimension / 2))) * dimension + "+\n"
-    val line = ("|" + (" " * (dimension / 2)) + ("x" + (" " * (dimension / 2)))) * dimension + "|\n"
-    var box = "\n" + (lineseparator + (line)) * dimension + lineseparator
-    for (reihe <- 0 to dimension - 1) {
-      for (spalte <- 0 to dimension - 1) {
-
-        if (zellen(reihe)(spalte).getGuessed == false) {
-
-          (box = box.replaceFirst("x", zellen(reihe)(spalte).open.toString()))
-          (box = box.replaceFirst("false", " "))
-          (box = box.replaceFirst("true", zellen(reihe)(spalte).pictureNr.toString()))
-        } else {
-          (box = box.replaceFirst("x", zellen(reihe)(spalte).pictureNr.toString()))
-
-        }
-
-      }
-    }
-    box
-  }
 
 }

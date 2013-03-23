@@ -1,6 +1,6 @@
-package model
+package util
 
 object Theme extends Enumeration {
-type Theme = Value //TODO:
+type Theme = Value 
     val fruits, fashion, people, countries = Value
 }

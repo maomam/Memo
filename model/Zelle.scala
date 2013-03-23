@@ -4,26 +4,28 @@ package model
 
 class Zelle (val row: Int, val col: Int){
 
-  //Think: should we move open and guessed logic to Feld?
-  var pictureNr= 0
-  var open = false
-  var guessed = false
+  
+  var _pictureNr= 0
+  var _open = false
+  var _guessed = false
     
- def setPictureNr (inhalt: Int){
-  pictureNr = inhalt
+ def pictureNr_ (inhalt: Int){
+  _pictureNr = inhalt
   
   }
-  def setOpen (variable: Boolean){
-  open = variable
+  def open_ (variable: Boolean){
+  _open = variable
   }
   
 def setGuessed = {
-  guessed = true
-  open = true
+  _guessed = true
+  _open = true
 }
  
-  def getOpen: Boolean = open
-  def getGuessed: Boolean = guessed
+  def open: Boolean = _open
+  def guessed: Boolean = _guessed
+  def pictureNr: Int =_pictureNr
+  
   
 
 }

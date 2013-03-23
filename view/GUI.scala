@@ -5,6 +5,7 @@ import scala.swing._
 import scala.swing.Swing.LineBorder
 import scala.swing.event._
 import javax.swing.ImageIcon
+import util.Theme
 
 class CellClicked(val row: Int, val column: Int) extends Event
 
@@ -18,16 +19,14 @@ class GUI(controller: Controller) extends Frame {
 
   var statusline = new Label(controller.statusText)
   var cells = new BilderPanel(controller, groesse)
-  def UserButtons(groesse: Int): BilderPanel = {
-    cells = new BilderPanel(controller, groesse)
-    cells
-  }
+  
   title = "Memospiel"
     reactions += {
     case e: FeldResize => resize(e.newSize)
-    case e: FieldChanged => redraw
+    case e: FieldSolved => showAllpictures
+    case e: FieldReset => redraw
     case e: GameOver => endGame
-    case e: ThemeChanged =>
+    case e: ThemeChanged => redraw
   }
 
   val resetGame = new Button {
@@ -42,7 +41,8 @@ class GUI(controller: Controller) extends Frame {
   val spiel6 = new Button {
     action = Action("Spielgroesse 6") {
       if (groesse == 6) {
-        controller.setStatusText("Spielfeld ist schon 2 Zellen gross")
+        controller.resizeTheSameSize
+        statusline.text = controller.statusText
       } else {
         groesse = 6
         controller.reset(6)
@@ -53,31 +53,24 @@ class GUI(controller: Controller) extends Frame {
   val spiel4 = new Button {
     action = Action("Spielgroesse 4") {
       if (groesse == 4) {
-
-        controller.setStatusText("Spielfeld ist schon 4 Zellen gross")
+        controller.resizeTheSameSize
+       statusline.text = controller.statusText
       } else {
-
         groesse = 4
         controller.reset(4)
-       
-
-      }
-
+       }
       statusline.text = controller.statusText
     }
   }
   val spiel8 = new Button {
     action = Action("Spielgroesse 8") {
       if (groesse == 8) {
-        //make this right here!
-        controller.setStatusText("Spielfeld ist schon 8 Zellen gross")
+        controller.resizeTheSameSize
+        statusline.text = controller.statusText
       } else {
-
         groesse = 8
         controller.reset(8)
-        
-
-      }
+        }
       statusline.text = controller.statusText
     }
   }
@@ -90,8 +83,8 @@ class GUI(controller: Controller) extends Frame {
 
   def functionPanel = new FlowPanel {
     contents += resetGame
-    contents += spiel6
     contents += spiel4
+    contents += spiel6
     contents += spiel8
     contents += loesen
     contents += statusline
@@ -133,77 +126,67 @@ class GUI(controller: Controller) extends Frame {
   }
 
   contents = new BorderPanel {
-
     add(functionPanel, BorderPanel.Position.South)
     add(picturesPanel, BorderPanel.Position.East)
-
     add(new FlowPanel {
-
     }, BorderPanel.Position.North)
-
-    add(UserButtons(groesse), BorderPanel.Position.Center)
+    add(cells, BorderPanel.Position.Center)
     visible = true
-
   }
 
   
 
   def endGame = {
     if (controller.feld.gameOver == true) {
+      cells.showAllPictures
       contents = new BorderPanel {
         add(functionPanel, BorderPanel.Position.South)
         add(picturesPanel, BorderPanel.Position.East)
         add(new FlowPanel {
-        }, BorderPanel.Position.South)
-        add(cells, BorderPanel.Position.West)
+        }, BorderPanel.Position.North)
+        add(cells, BorderPanel.Position.Center)
 
       }
+      Dialog.showMessage(message = "Spiel gelöst")
     }
   }
 
   def resize(newSize: Int) = {
     groesse = newSize
     cells = new BilderPanel(controller, newSize)
-    cells.setAlleButtonSize(newSize)
-
     contents = new BorderPanel {
       add(functionPanel, BorderPanel.Position.South)
       add(picturesPanel, BorderPanel.Position.East)
       add(new FlowPanel {
       }, BorderPanel.Position.North)
-      add(cells, BorderPanel.Position.West)
+      add(cells, BorderPanel.Position.Center)
 
     }
 
   }
 
   def redraw = {
-
-   /* if (controller.feld.gameOver | controller.feld.gameIsOver == true) {
+    cells.redrawPanel
       contents = new BorderPanel {
-        add(functionPanel, BorderPanel.Position.South)
-        add(picturesPanel, BorderPanel.Position.East)
-        add(new FlowPanel {
-        }, BorderPanel.Position.North)
-        add(cells, BorderPanel.Position.West)
-
-      }
-    } else {*/
-      contents = new BorderPanel {
-        add(functionPanel, BorderPanel.Position.South)
-        add(picturesPanel, BorderPanel.Position.East)
-        add(new FlowPanel {
-
-        }, BorderPanel.Position.North)
-        add(cells, BorderPanel.Position.West)
-
-        cells = new BilderPanel(controller, groesse)
-
-      
+      add(functionPanel, BorderPanel.Position.South)
+      add(picturesPanel, BorderPanel.Position.East)
+      add(new FlowPanel {
+      }, BorderPanel.Position.North)
+      add(cells, BorderPanel.Position.Center)
     }
-
     repaint()
-
   }
-
+  
+ def showAllpictures ={
+   cells.showAllPictures
+     contents = new BorderPanel {
+      add(functionPanel, BorderPanel.Position.South)
+      add(picturesPanel, BorderPanel.Position.East)
+      add(new FlowPanel {
+      }, BorderPanel.Position.North)
+      add(cells, BorderPanel.Position.Center)
+    }
+   repaint()
+    Dialog.showMessage(message = "Spiel beendet")
+ }
 }

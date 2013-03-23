@@ -3,6 +3,7 @@ import controller._
 import model._
 import util._
 import scala.swing.Reactor
+import util.Theme
 
 
 class TUI(var controller: Controller) extends Reactor {
@@ -10,10 +11,18 @@ listenTo(controller.feld)
 
  printTui
   reactions += {
-    case e: FeldResize => printTui
-    case e: FieldChanged => printTui
-    case e: GameOver =>
-    case e: ThemeChanged =>
+    case e: FeldResize => {printTui
+      println(controller.statusText)}
+    case e: FieldSolved => {printTui
+      println(controller.statusText)}
+    
+    case e: FieldReset => {printTui
+      println(controller.statusText)}
+    case e: CellsGuessed => printTui
+    case e: CellsClosed => printTui
+    case e: CellOpened => printTui
+    case e: GameOver => println(controller.statusText)
+    case e: ThemeChanged => println(controller.statusText)
   }
 
 println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
@@ -71,13 +80,17 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
     for (reihe <- 0 to dim - 1) {
       for (spalte <- 0 to dim - 1) {
 
-        if (feld(reihe, spalte).getGuessed == false) {
+        if (feld(reihe, spalte).guessed == false) {
           (box = box.replaceFirst("xx", feld(reihe, spalte).open.toString()))
           (box = box.replaceFirst("false", n.toString.padTo(2," ").mkString))
           (box = box.replaceFirst("true", "##"))
         } else {
-          (box = box.replaceFirst("xx", "**"))
-
+          controller.currentTheme match {
+            case Theme.people =>  (box = box.replaceFirst("xx", "**"))
+            case Theme.fruits => (box = box.replaceFirst("xx", ":-)"))
+            case Theme.countries => (box = box.replaceFirst("xx", "OO"))
+            case Theme.fashion => (box = box.replaceFirst("xx", "<>"))
+              }
         }
        n+=1
       }
