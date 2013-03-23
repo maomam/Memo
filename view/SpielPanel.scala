@@ -23,10 +23,11 @@ class BilderPanel(controller: Controller, size: Int) extends GridPanel(size, siz
   
   reactions += {
     case e: CellsGuessed => {
-      //TODO: sleep(1000)
+      Thread.sleep(1000)
       hideButtons(e.guessedCells)
     }
     case e: CellsClosed => {
+       Thread.sleep(1000)
       closeButtons(e.cellsToClose)
     }
     case e: CellOpened =>
@@ -45,10 +46,15 @@ class BilderPanel(controller: Controller, size: Int) extends GridPanel(size, siz
     var folderName = controller.currentTheme
     var imgURL = getClass().getResource(imageDirectory + folderName + fileName);
     var image: Image = null;
-    // try {
+    var newimg :Image =null
+     try {
     image = ImageIO.read(imgURL);
-    // } catch (IOException e) {}
     var newimg = image.getScaledInstance(60, 60, java.awt.Image.SCALE_SMOOTH);
+    } catch {
+      case  ioe: IOException => println("Image konnte nicht geladen werden")
+       case e: Exception => println ("Keine Ahnung was für Exeption")
+       case n: NullPointerException => println("Null Pointer Exception")}
+    
     val newIcon = new ImageIcon(newimg);
     newIcon
   }

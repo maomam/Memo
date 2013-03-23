@@ -4,6 +4,7 @@ import model._
 import util._
 import scala.swing.Reactor
 import util.Theme
+import java.io.IOException
 
 
 class TUI(var controller: Controller) extends Reactor {
@@ -59,13 +60,19 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
       case "size 4" => controller.reset(4); 
       case "size 6" => controller.reset(6); 
       case numberString => {
+        try {
         val number = numberString.toInt
         val fieldDim = controller.feld.dimension
         if (number >= 1 && number <= fieldDim*fieldDim){
           controller.selectCell(cellNumberToCoords(number)) 
         }
-        else{ println("Falsche Eingabe")}
+        else{ println("Falsche Eingabe. Bitet Spielfeldgrösse beachten")}
       }
+       catch {
+         case  ioe: IOException => println("Falsche Eingabe. Bitte Zahl eingeben")
+      }
+      }
+    
       
     }
     continue
@@ -87,7 +94,7 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
         } else {
           controller.currentTheme match {
             case Theme.people =>  (box = box.replaceFirst("xx", "**"))
-            case Theme.fruits => (box = box.replaceFirst("xx", ":-)"))
+            case Theme.fruits => (box = box.replaceFirst("xx", ":-"))
             case Theme.countries => (box = box.replaceFirst("xx", "OO"))
             case Theme.fashion => (box = box.replaceFirst("xx", "<>"))
               }
