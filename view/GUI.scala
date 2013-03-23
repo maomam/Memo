@@ -12,10 +12,10 @@ class CellClicked(val row: Int, val column: Int) extends Event
 class GUI(controller: Controller) extends Frame {
   var groesse = controller.feld.zellen.length
   listenTo(controller.feld)
-  var peopleIcon = new ImageIcon("C:/Users/daryna.ariamnova/Documents/eclipse/workspace/Memospiel/src/images/ControlPictures/People.png")
-  var fruitsIcon = new ImageIcon("C:/Users/daryna.ariamnova/Documents/eclipse/workspace/Memospiel/src/images/ControlPictures/fruits.png")
-  var fashionIcon = new ImageIcon("C:/Users/daryna.ariamnova/Documents/eclipse/workspace/Memospiel/src/images/ControlPictures/fashion.png")
-  var countriesIcon = new ImageIcon("C:/Users/daryna.ariamnova/Documents/eclipse/workspace/Memospiel/src/images/ControlPictures/countries.png")
+  var peopleIcon = new ImageIcon("src/images/ControlPictures/People.png")
+  var fruitsIcon = new ImageIcon("src/images/ControlPictures/fruits.png")
+  var fashionIcon = new ImageIcon("src/images/ControlPictures/fashion.png")
+  var countriesIcon = new ImageIcon("src/images/ControlPictures/countries.png")
 
   var statusline = new Label(controller.statusText)
   var cells = new BilderPanel(controller, groesse)
@@ -137,7 +137,6 @@ class GUI(controller: Controller) extends Frame {
   
 
   def endGame = {
-    if (controller.feld.gameOver == true) {
       cells.showAllPictures
       contents = new BorderPanel {
         add(functionPanel, BorderPanel.Position.South)
@@ -147,8 +146,9 @@ class GUI(controller: Controller) extends Frame {
         add(cells, BorderPanel.Position.Center)
 
       }
+        repaint()
       Dialog.showMessage(message = "Spiel gelöst")
-    }
+    
   }
 
   def resize(newSize: Int) = {
