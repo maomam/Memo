@@ -117,20 +117,21 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value) extends Publisher 
     }
 
   def tryOpen(row: Int, col: Int) = {
-    openCellsToString(tempOpenCellsSet)
+    
     if (!tempOpenCellsSet.contains((row, col))&& !this(row,col).guessed) {
       val openCellsCount = tempOpenCellsSet.size
       if (openCellsCount == 2){ 
-         closeOpenCells()
-         publish(new CellsClosed(tempOpenCellsSet.toList))
-         tempOpenCellsSet.add((row, col))
          this(row, col).open_(true)
          publish(new CellOpened((row,col)))
+         publish(new CellsClosed(tempOpenCellsSet.toList))
+         closeOpenCells()
+         tempOpenCellsSet.add((row, col))
+        
       }
       if (openCellsCount == 1) {
         //it should check whether it is right match to decide whether to close it. 
-        getCell(row, col).open_(true)
-        
+        this(row, col).open_(true)
+        publish(new CellOpened((row, col)))
         val openCell = tempOpenCellsSet.head
         if(isMatch(openCell,(row,col))){
           this(row, col).setGuessed
@@ -140,11 +141,11 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value) extends Publisher 
           publish(new CellsGuessed(openCell::List((row,col))))
         }
          tempOpenCellsSet.add((row, col))
-         publish(new CellOpened((row, col)))
+         
       }
       if(openCellsCount==0){
          tempOpenCellsSet.add((row, col))
-         getCell(row, col).open_(true)
+         this(row, col).open_(true)
          publish(new CellOpened((row, col)))
       }
     }
@@ -161,7 +162,7 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value) extends Publisher 
      gameIsOver
   }
 
-  def getCell(r: Int, c: Int) = zellen(r)(c)
+
 
   /*  override def toString = {
     val lineseparator = ("+-" + ("--" * (dimension / 2))) * dimension + "+\n"

@@ -7,6 +7,7 @@ import scala.swing.event._
 import javax.swing.ImageIcon
 import util.Theme
 
+
 class CellClicked(val row: Int, val column: Int) extends Event
 
 class GUI(controller: Controller) extends Frame {
@@ -16,7 +17,6 @@ class GUI(controller: Controller) extends Frame {
   var fruitsIcon = new ImageIcon("src/images/ControlPictures/fruits.png")
   var fashionIcon = new ImageIcon("src/images/ControlPictures/fashion.png")
   var countriesIcon = new ImageIcon("src/images/ControlPictures/countries.png")
-
   var statusline = new Label(controller.statusText)
   var cells = new BilderPanel(controller, groesse)
   
@@ -90,21 +90,22 @@ class GUI(controller: Controller) extends Frame {
     contents += statusline
   }
   val people = new Button {
-    action = Action("People") {
+    action = Action("") {
     controller.changeTheme(Theme.people)
     }
     preferredSize_=(new Dimension(120, 60))
     icon = peopleIcon
   }
+ 
   val fruits = new Button {
-    action = Action("Fruits") {
+    action = Action("") {
     controller.changeTheme(Theme.fruits)
     }
     preferredSize_=(new Dimension(120, 60))
     icon = fruitsIcon
   }
   val fashion = new Button {
-    action = Action("Fashion") {
+    action = Action("") {
     controller.changeTheme(Theme.fashion)
     }
     preferredSize_=(new Dimension(120, 60))
@@ -112,7 +113,7 @@ class GUI(controller: Controller) extends Frame {
   }
 
   val countries = new Button {
-    action = Action("Countries") {
+    action = Action("") {
     controller.changeTheme(Theme.countries)
     }
     preferredSize_=(new Dimension(120, 60))

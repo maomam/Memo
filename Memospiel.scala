@@ -14,6 +14,7 @@ def main(args: Array[String]) {
   
     userGui.visible = true
     userGui.resizable = false
+    userGui.pack
 
     while ((userTui.readInput(readLine())) == true) {
       
