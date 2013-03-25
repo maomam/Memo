@@ -70,6 +70,7 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
       }
        catch {
          case  ioe: IOException => println("Falsche Eingabe. Bitte Zahl eingeben")
+         case  e: Exception => println("Falsche Eingabe. Bitte Zahl eingeben")
       }
       }
     
