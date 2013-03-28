@@ -74,6 +74,18 @@ class GUI(controller: Controller) extends Frame {
       statusline.text = controller.statusText
     }
   }
+  val spiel2 = new Button {
+    action = Action("Spielgroesse 2") {
+      if (groesse == 2) {
+        controller.resizeTheSameSize
+        statusline.text = controller.statusText
+      } else {
+        groesse = 2
+        controller.reset(2)
+        }
+      statusline.text = controller.statusText
+    }
+  }
   val loesen = new Button {
     action = Action("Spiel loesen") {
       controller.solve
@@ -82,11 +94,12 @@ class GUI(controller: Controller) extends Frame {
   }
 
   def functionPanel = new FlowPanel {
-    contents += resetGame
+    contents += spiel2
     contents += spiel4
     contents += spiel6
     contents += spiel8
     contents += loesen
+    contents += resetGame
     contents += statusline
   }
   val people = new Button {

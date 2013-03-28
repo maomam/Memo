@@ -59,6 +59,7 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
       case "size 8" => controller.reset(8);
       case "size 4" => controller.reset(4); 
       case "size 6" => controller.reset(6); 
+      case "size 2" => controller.reset(2);
       case numberString => {
         try {
         val number = numberString.toInt

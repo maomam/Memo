@@ -16,7 +16,7 @@ case class ThemeChanged(newTheme: Theme.Value) extends Event
 // TODO: add new events
 
 class Feld(var dimension: Int, var currentTheme: Theme.Value) extends Publisher {
-  require(List(6, 4, 8).contains(dimension))
+  require(List(2, 6, 4, 8).contains(dimension))
  
  
   var anzahlZellen = dimension * dimension - 1
