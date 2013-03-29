@@ -1,21 +1,9 @@
 package model
 
-import scala.swing.Publisher
-import scala.swing.event.Event
 import model._
 import util.Theme
 
-case class GameOver extends Event
-case class FieldSolved extends Event
-case class FieldReset extends Event
-case class CellsGuessed(guessedCells: List[Coordinates]) extends Event
-case class CellsClosed(cellsToClose: List [Coordinates])  extends Event
-case class CellOpened(cellToOpen: Coordinates) extends Event
-case class FeldResize(newSize: Int) extends Event
-case class ThemeChanged(newTheme: Theme.Value) extends Event
-// TODO: add new events
-
-class Feld(var dimension: Int, var currentTheme: Theme.Value) extends Publisher {
+class Feld(var dimension: Int, var currentTheme: Theme.Value){
   require(List(2, 6, 4, 8).contains(dimension))
  
  
@@ -64,29 +52,27 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value) extends Publisher 
 
  def setTheme (newTheme:Theme.Value)={
    currentTheme=newTheme
-   publish(new ThemeChanged(newTheme))
- }
+   }
   
   def apply(coords: Coordinates) = zellen(coords._1)(coords._2)
 
-  def reset(fieldSize:Int) = {
-    if (fieldSize ==dimension){
+  def reset : Unit = {
+   
       for (i <- 0 to dimension - 1) {
       for (j <- 0 to dimension - 1) {
         zellen(i)(j).pictureNr_(0)
 
       }
     }
-      setPictures(fieldSize)
-      publish(new FieldReset)
-    }
-    else{
-      zellen =generateCells(fieldSize)
-      setPictures(fieldSize)
-      dimension =fieldSize
-      publish(new FeldResize(dimension))
-    }
-    
+      setPictures(dimension)
+      
+     
+  }
+  
+  def resize(newFieldSize:Int)={
+     zellen =generateCells(newFieldSize)
+      setPictures(newFieldSize)
+      dimension =newFieldSize
   }
     
  def solve: Unit = {
@@ -96,9 +82,7 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value) extends Publisher 
       }
     }
     gameIsOver=true
-    publish(new FieldSolved)
- 
-  }
+    }
 
   def isMatch(coords1: (Int, Int), coords2: (Int, Int)): Boolean = 
    !this(coords1).guessed && !this(coords2).guessed &&
@@ -116,29 +100,36 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value) extends Publisher 
       tempOpenCellsSet.clear
     }
 
-  def tryOpen(row: Int, col: Int) = {
-    
+  def tryOpen(row: Int, col: Int): ( List[Coordinates], List[Coordinates], Coordinates, Boolean ) = {
+     var toClose : List[Coordinates] = null
+     var toGuessed : List[Coordinates] = null
+     var toOpen:  Coordinates = null
+     var thisGameOver =false
     if (!tempOpenCellsSet.contains((row, col))&& !this(row,col).guessed) {
       val openCellsCount = tempOpenCellsSet.size
       if (openCellsCount == 2){ 
          this(row, col).open_(true)
-         publish(new CellOpened((row,col)))
-         publish(new CellsClosed(tempOpenCellsSet.toList))
+         toClose = tempOpenCellsSet.toList
+         toOpen = (row,col)
+         //publish(new CellOpened((row,col)))
+      //   publish(new CellsClosed(tempOpenCellsSet.toList))
          closeOpenCells()
          tempOpenCellsSet.add((row, col))
         
       }
       if (openCellsCount == 1) {
-        //it should check whether it is right match to decide whether to close it. 
+      
         this(row, col).open_(true)
-        publish(new CellOpened((row, col)))
+        toOpen =(row,col)
+        // publish(new CellOpened((row, col)))
         val openCell = tempOpenCellsSet.head
         if(isMatch(openCell,(row,col))){
           this(row, col).setGuessed
           this(openCell).setGuessed
         counterGuessed = counterGuessed + 1
           tempOpenCellsSet.clear
-          publish(new CellsGuessed(openCell::List((row,col))))
+         toGuessed=  openCell::List((row,col)) 
+         // publish(new CellsGuessed(openCell::List((row,col))))
         }
          tempOpenCellsSet.add((row, col))
          
@@ -146,37 +137,22 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value) extends Publisher 
       if(openCellsCount==0){
          tempOpenCellsSet.add((row, col))
          this(row, col).open_(true)
-         publish(new CellOpened((row, col)))
+         toOpen = (row,col)
+         //publish(new CellOpened((row, col)))
       }
     }
     if(gameOver){
-      publish(new GameOver)
+     thisGameOver = true
     }
+   ( toClose, toGuessed , toOpen, thisGameOver)
   }
 
   def gameOver: Boolean = {
       if (counterGuessed == (dimension*dimension)/2) {
         gameIsOver = true
-         gameIsOver
-      }
+       }
      gameIsOver
   }
-
-
-
-  /*  override def toString = {
-    val lineseparator = ("+-" + ("--" * (dimension / 2))) * dimension + "+\n"
-    val line = ("|" + (" " * (dimension / 2)) + ("x" + (" " * (dimension / 2)))) * dimension + "|\n"
-    var box = "\n" + (lineseparator + (line)) * dimension + lineseparator
-    for (reihe <- 0 to dimension - 1) {
-      for (spalte <- 0 to dimension - 1) {
-
-        (box = box.replaceFirst("x", zellen(reihe)(spalte).pictureNr.toString()))
-
-      }
-    }
-    box
-  }*/
 
 
 }

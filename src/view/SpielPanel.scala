@@ -2,6 +2,7 @@ package view
 
 import model.Coordinates
 import model._
+import controller._
 import scala.swing._
 import scala.swing.event._
 import controller.Controller
@@ -19,7 +20,7 @@ class BilderPanel(controller: Controller, size: Int) extends GridPanel(size, siz
   val unguessedIcon = new ImageIcon("src/images/ControlPictures/question.png")
   var gameSize = size
   var allButtons = Array.ofDim[Button](size, size)
-  listenTo(controller.feld)
+  listenTo(controller)
   createButtons
 
   reactions += {

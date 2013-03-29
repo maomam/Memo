@@ -8,7 +8,7 @@ import java.io.IOException
 
 
 class TUI(var controller: Controller) extends Reactor {
-listenTo(controller.feld)
+listenTo(controller)
 
  printTui
   reactions += {
@@ -23,7 +23,8 @@ listenTo(controller.feld)
     case e: CellsClosed => printTui
     case e: CellOpened => printTui
     case e: GameOver => println(controller.statusText)
-    case e: ThemeChanged => println(controller.statusText)
+    case e: ThemeChanged => {printTui 
+      println(controller.statusText)}
   }
 
 println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
@@ -52,14 +53,14 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
       case "l" => {controller.solve; continue=false;}
       case "q" => continue =false
       case "r" => {
-        controller.reset(size)
+        controller.reset
         println("Das  Feld wurde zurueckgesetzt")
       }
       // rewrite into single case 
-      case "size 8" => controller.reset(8);
-      case "size 4" => controller.reset(4); 
-      case "size 6" => controller.reset(6); 
-      case "size 2" => controller.reset(2);
+      case "size 8" => controller.resize(8);
+      case "size 4" => controller.resize(4); 
+      case "size 6" => controller.resize(6); 
+      case "size 2" => controller.resize(2);
       case numberString => {
         try {
         val number = numberString.toInt
