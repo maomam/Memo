@@ -75,7 +75,9 @@ class Controller(var feld: Feld) extends Publisher {
   
   
 
-  
+  def pictureNr (c :Coordinates) : Int ={
+    feld(c._1, c._2).pictureNr
+  }
  
   def currentTheme = feld.currentTheme
 

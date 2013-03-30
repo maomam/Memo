@@ -16,6 +16,9 @@ class Zelle (val row: Int, val col: Int){
   def open_ (variable: Boolean){
   _open = variable
   }
+  def guessed_ (variable: Boolean){
+  _guessed = variable
+  }
   
 def setGuessed = {
   _guessed = true

@@ -25,16 +25,15 @@ class BilderPanel(controller: Controller, size: Int) extends GridPanel(size, siz
 
   reactions += {
     case e: CellsGuessed => {
-      Thread.sleep(1000)
       hideButtons(e.guessedCells)
     }
     case e: CellsClosed => {
-      Thread.sleep(1000)
+     
       closeButtons(e.cellsToClose)
     }
     case e: CellOpened =>
-      openButton(e.cellToOpen)
-
+     openButton(e.cellToOpen)
+     
   }
 
   private def hideButtons(c: List[Coordinates]): Unit =
@@ -44,7 +43,7 @@ class BilderPanel(controller: Controller, size: Int) extends GridPanel(size, siz
     c.foreach(x => allButtons(x._1)(x._2).icon = unguessedIcon)
 
   private def findPicture(c: Coordinates): ImageIcon = {
-    var fileName = controller.feld(c._1, c._2).pictureNr.toString
+    var fileName = controller.pictureNr(c._1, c._2).toString
     var folderName = controller.currentTheme.toString()
     var addressString = new StringBuilder()
     addressString.append(imageDirectory)

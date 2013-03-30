@@ -12,8 +12,7 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value){
   var counterGuessed = 0
   val tempOpenCellsSet = scala.collection.mutable.Set[Coordinates]()
   
-  var zellen = {generateCells(dimension)
-  }
+  var zellen = {generateCells(dimension)}
   
   def generateCells(size:Int): Array[Array[Zelle]] ={
     val temp = Array.ofDim[Zelle](size,size)
@@ -51,17 +50,22 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value){
   }
 
  def setTheme (newTheme:Theme.Value)={
+   reset
    currentTheme=newTheme
    }
   
   def apply(coords: Coordinates) = zellen(coords._1)(coords._2)
 
   def reset : Unit = {
-   
+    counterGuessed =0
+    gameIsOver = false
       for (i <- 0 to dimension - 1) {
       for (j <- 0 to dimension - 1) {
         zellen(i)(j).pictureNr_(0)
-
+        zellen(i)(j).guessed_(false)
+        zellen(i)(j).open_(false)
+        
+        
       }
     }
       setPictures(dimension)
@@ -70,6 +74,8 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value){
   }
   
   def resize(newFieldSize:Int)={
+    counterGuessed =0
+    gameIsOver = false
      zellen =generateCells(newFieldSize)
       setPictures(newFieldSize)
       dimension =newFieldSize
@@ -111,17 +117,13 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value){
          this(row, col).open_(true)
          toClose = tempOpenCellsSet.toList
          toOpen = (row,col)
-         //publish(new CellOpened((row,col)))
-      //   publish(new CellsClosed(tempOpenCellsSet.toList))
-         closeOpenCells()
+        closeOpenCells()
          tempOpenCellsSet.add((row, col))
         
       }
       if (openCellsCount == 1) {
-      
         this(row, col).open_(true)
         toOpen =(row,col)
-        // publish(new CellOpened((row, col)))
         val openCell = tempOpenCellsSet.head
         if(isMatch(openCell,(row,col))){
           this(row, col).setGuessed
@@ -129,16 +131,18 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value){
         counterGuessed = counterGuessed + 1
           tempOpenCellsSet.clear
          toGuessed=  openCell::List((row,col)) 
-         // publish(new CellsGuessed(openCell::List((row,col))))
+        }else{
+          tempOpenCellsSet.add((row, col))
+        
         }
-         tempOpenCellsSet.add((row, col))
+         
          
       }
       if(openCellsCount==0){
          tempOpenCellsSet.add((row, col))
          this(row, col).open_(true)
          toOpen = (row,col)
-         //publish(new CellOpened((row, col)))
+         
       }
     }
     if(gameOver){

@@ -84,7 +84,7 @@ class GUI(controller: Controller) extends Frame {
   }
   val people = new Button {
     action = Action("") {
-      controller.reset
+      
       controller.changeTheme(Theme.people)
     }
     preferredSize_=(new Dimension(120, 60))
@@ -93,7 +93,7 @@ class GUI(controller: Controller) extends Frame {
 
   val fruits = new Button {
     action = Action("") {
-      controller.reset
+     
       controller.changeTheme(Theme.fruits)
     }
     preferredSize_=(new Dimension(120, 60))
@@ -101,8 +101,9 @@ class GUI(controller: Controller) extends Frame {
   }
   val fashion = new Button {
     action = Action("") {
-      controller.reset
+      
       controller.changeTheme(Theme.fashion)
+      
     }
     preferredSize_=(new Dimension(120, 60))
     icon = fashionIcon
@@ -110,7 +111,7 @@ class GUI(controller: Controller) extends Frame {
 
   val countries = new Button {
     action = Action("") {
-      controller.reset
+      
       controller.changeTheme(Theme.countries)
     }
     preferredSize_=(new Dimension(120, 60))
