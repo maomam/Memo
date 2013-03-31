@@ -17,14 +17,14 @@ class TestCell extends SpecificationWithJUnit{
     }
     
      "setOpen" in{
-      zelle.open_(true)
+      zelle.open = true
       var newOpen =zelle.open
       newOpen must be_==(true)
       
     }
      
     "setClosed" in{
-      zelle.open_(false)
+      zelle.open = false
       var newOpen1 =zelle.open
       newOpen1 must be_==(false)
     }
@@ -34,7 +34,7 @@ class TestCell extends SpecificationWithJUnit{
     }
      
       "setGuessed" in{
-      zelle.setGuessed
+      zelle.guessed = true
       var newGuessed = zelle.guessed
       newGuessed must be_==(true)
       var newOpen2 =zelle.open
@@ -44,7 +44,7 @@ class TestCell extends SpecificationWithJUnit{
       
       
       "setPictureNr" in{
-      zelle.pictureNr_(1)
+      zelle.pictureNr = 1
       var newPictureNr = zelle.pictureNr
       newPictureNr must be_==(1)
       

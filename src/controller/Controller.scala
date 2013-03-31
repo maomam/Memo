@@ -36,25 +36,14 @@ class Controller(var feld: Feld) extends Publisher {
   }
 
   def selectCell(cellCoords: (Int, Int)) = {
-   var tuples: (List[Coordinates], List[Coordinates], Coordinates, Boolean)=  feld.tryOpen(cellCoords._1, cellCoords._2) 
-   var toClose=  tuples._1
-   var toGuessed= tuples._2
-   var toOpen = tuples._3
+   val chgCells = feld.tryOpen(cellCoords._1, cellCoords._2) 
    
-   if(toClose !=null){
-    publish(new CellsClosed(toClose))
+   if(!chgCells.closedCells.isEmpty) publish(new CellsClosed(chgCells.closedCells))
+   if(!chgCells.guessedCells.isEmpty) publish(new CellsGuessed(chgCells.guessedCells))
+   chgCells.openedCell match {
+     case Some(coords) => publish(new CellOpened(coords))
    }
-   if(toGuessed !=null){
-    publish(new CellsGuessed(toGuessed))
-   }
-   if(toOpen !=null){
-    publish(new CellOpened(toOpen))
-   }
-    
-    if( tuples._4){
-     publish(new GameOver)
-   }
-    
+   if(feld.gameOver) publish(new GameOver)
   }
 
   def reset = {
@@ -78,6 +67,7 @@ class Controller(var feld: Feld) extends Publisher {
   def pictureNr (c :Coordinates) : Int ={
     feld(c._1, c._2).pictureNr
   }
+ def fieldSize =feld.dimension
  
   def currentTheme = feld.currentTheme
 

@@ -14,26 +14,24 @@ import javax.imageio.ImageIO
 import java.io.IOException
 import java.io.File
 
-class BilderPanel(controller: Controller, size: Int) extends GridPanel(size, size) {
+class BilderPanel(controller: Controller) extends GridPanel(controller.fieldSize, controller.fieldSize) {
 
   val imageDirectory = "src/images/"
   val unguessedIcon = new ImageIcon("src/images/ControlPictures/question.png")
-  var gameSize = size
-  var allButtons = Array.ofDim[Button](size, size)
+  var allButtons = Array.ofDim[Button](controller.fieldSize, controller.fieldSize)
+  
   listenTo(controller)
+  //TODO: make this method return an array of buttons
   createButtons
-
   reactions += {
     case e: CellsGuessed => {
       hideButtons(e.guessedCells)
     }
     case e: CellsClosed => {
-     
       closeButtons(e.cellsToClose)
     }
     case e: CellOpened =>
      openButton(e.cellToOpen)
-     
   }
 
   private def hideButtons(c: List[Coordinates]): Unit =
@@ -53,13 +51,14 @@ class BilderPanel(controller: Controller, size: Int) extends GridPanel(size, siz
     addressString.append(".jpg")
     var imgURL = new File(addressString.toString)
     var image: Image = ImageIO.read(imgURL)
+    //see if we can simplify this method
     val newIcon = new ImageIcon(image);
     newIcon
   }
 
   private def openButton(c: Coordinates): Unit = {
+    println ("(" + c._1 + ", " + c._2 + ")")
     allButtons(c._1)(c._2).icon = findPicture(c._1, c._2)
-
   }
 
   def button(Row: Int, Column: Int) = new Button {
@@ -72,9 +71,8 @@ class BilderPanel(controller: Controller, size: Int) extends GridPanel(size, siz
   }
 
   def createButtons {
-    contents.clear()
-    for (m <- 0 to (allButtons.length - 1)) {
-      for (n <- 0 to (allButtons.length - 1)) {
+    for (m <- 0 to (controller.fieldSize - 1)) {
+      for (n <- 0 to (controller.fieldSize - 1)) {
         var buttons = button(m, n)
         allButtons(m)(n) = buttons
         contents += buttons
@@ -83,15 +81,15 @@ class BilderPanel(controller: Controller, size: Int) extends GridPanel(size, siz
   }
 
   def redrawPanel = {
-    allButtons = Array.ofDim[Button](gameSize, gameSize)
+    allButtons = Array.ofDim[Button](controller.fieldSize, controller.fieldSize)
     createButtons
     repaint
   }
 
   def showAllPictures = {
     redrawPanel
-    for (r <- 0 to (allButtons.length - 1)) {
-      for (c <- 0 to (allButtons.length - 1)) {
+    for (r <- 0 to (controller.fieldSize - 1)) {
+      for (c <- 0 to (controller.fieldSize - 1)) {
         allButtons(r)(c).icon = findPicture(r, c)
       }
     }

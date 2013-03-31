@@ -11,15 +11,16 @@ import controller._
 class CellClicked(val row: Int, val column: Int) extends Event
 
 class GUI(controller: Controller) extends Frame {
-  var groesse = controller.feld.zellen.length
-  listenTo(controller)
-  var peopleIcon = new ImageIcon("src/images/ControlPictures/People.png")
-  var fruitsIcon = new ImageIcon("src/images/ControlPictures/fruits.png")
+  private val picturesPath = "src/images/ControlPictures/"
+  //TODO: Rename var into val, path
+  var peopleIcon = new ImageIcon(picturesPath + "People.png")
+  var fruitsIcon = new ImageIcon(picturesPath + "fruits.png")
   var fashionIcon = new ImageIcon("src/images/ControlPictures/fashion.png")
   var countriesIcon = new ImageIcon("src/images/ControlPictures/countries.png")
   var statusline = new Label(controller.statusText)
-  var cells = new BilderPanel(controller, groesse)
+  var bilderPanel = new BilderPanel(controller)
 
+  listenTo(controller)
   title = "Memospiel"
   reactions += {
     case e: FeldResize => resize(e.newSize)
@@ -28,7 +29,7 @@ class GUI(controller: Controller) extends Frame {
     case e: GameOver => endGame
     case e: ThemeChanged => redraw
   }
-
+ 
   val resetGame = new Button {
     action = Action("Spiel neu Starten") {
       controller.reset
@@ -39,30 +40,25 @@ class GUI(controller: Controller) extends Frame {
 
   val spiel6 = new Button {
     action = Action("Spielgroesse 6") {
-      groesse = 6
       controller.resize(6)
       statusline.text = controller.statusText
     }
   }
   val spiel4 = new Button {
     action = Action("Spielgroesse 4") {
-      groesse = 4
       controller.resize(4)
       statusline.text = controller.statusText
     }
   }
   val spiel8 = new Button {
     action = Action("Spielgroesse 8") {
-      groesse = 8
       controller.resize(8)
       statusline.text = controller.statusText
     }
   }
   val spiel2 = new Button {
     action = Action("Spielgroesse 2") {
-      groesse = 2
       controller.resize(2)
-
       statusline.text = controller.statusText
     }
   }
@@ -72,6 +68,54 @@ class GUI(controller: Controller) extends Frame {
       statusline.text = controller.statusText
     }
   }
+  
+  val people = new Button {
+    action = Action("") {
+
+      controller.changeTheme(Theme.people)
+    }
+    preferredSize_=(new Dimension(120, 60))
+    icon = peopleIcon
+  }
+
+  val fruits = new Button {
+    action = Action("") {
+      controller.changeTheme(Theme.fruits)
+    }
+    preferredSize_=(new Dimension(120, 60))
+    icon = fruitsIcon
+  }
+
+  val fashion = new Button {
+    action = Action("") {
+      controller.changeTheme(Theme.fashion)
+    }
+    preferredSize_=(new Dimension(120, 60))
+    icon = fashionIcon
+  }
+
+  val countries = new Button {
+    action = Action("") {
+      controller.changeTheme(Theme.countries)
+    }
+    preferredSize_=(new Dimension(120, 60))
+    icon = countriesIcon
+  }
+
+ 
+  createContents()
+   
+  def createContents(): Unit =
+    contents = new BorderPanel {
+      add(functionPanel, BorderPanel.Position.South)
+      add(picturesPanel, BorderPanel.Position.East)
+      add(new FlowPanel {
+      }, BorderPanel.Position.North)
+      add(bilderPanel, BorderPanel.Position.Center)
+      visible = true
+    }
+
+  
 
   def functionPanel = new FlowPanel {
     contents += spiel2
@@ -82,41 +126,7 @@ class GUI(controller: Controller) extends Frame {
     contents += resetGame
     contents += statusline
   }
-  val people = new Button {
-    action = Action("") {
-      
-      controller.changeTheme(Theme.people)
-    }
-    preferredSize_=(new Dimension(120, 60))
-    icon = peopleIcon
-  }
-
-  val fruits = new Button {
-    action = Action("") {
-     
-      controller.changeTheme(Theme.fruits)
-    }
-    preferredSize_=(new Dimension(120, 60))
-    icon = fruitsIcon
-  }
-  val fashion = new Button {
-    action = Action("") {
-      
-      controller.changeTheme(Theme.fashion)
-      
-    }
-    preferredSize_=(new Dimension(120, 60))
-    icon = fashionIcon
-  }
-
-  val countries = new Button {
-    action = Action("") {
-      
-      controller.changeTheme(Theme.countries)
-    }
-    preferredSize_=(new Dimension(120, 60))
-    icon = countriesIcon
-  }
+  
   def picturesPanel = new GridPanel(4, 1) {
     contents += people
     contents += fruits
@@ -124,65 +134,29 @@ class GUI(controller: Controller) extends Frame {
     contents += countries
   }
 
-  contents = new BorderPanel {
-    add(functionPanel, BorderPanel.Position.South)
-    add(picturesPanel, BorderPanel.Position.East)
-    add(new FlowPanel {
-    }, BorderPanel.Position.North)
-    add(cells, BorderPanel.Position.Center)
-    visible = true
-  }
-
   def endGame = {
-    cells.showAllPictures
-    contents = new BorderPanel {
-      add(functionPanel, BorderPanel.Position.South)
-      add(picturesPanel, BorderPanel.Position.East)
-      add(new FlowPanel {
-      }, BorderPanel.Position.North)
-      add(cells, BorderPanel.Position.Center)
-
-    }
+    bilderPanel.showAllPictures
+    createContents()
     repaint()
     Dialog.showMessage(message = "Spiel gelöst")
 
   }
 
   def resize(newSize: Int) = {
-    groesse = newSize
-    cells = new BilderPanel(controller, newSize)
-    contents = new BorderPanel {
-      add(functionPanel, BorderPanel.Position.South)
-      add(picturesPanel, BorderPanel.Position.East)
-      add(new FlowPanel {
-      }, BorderPanel.Position.North)
-      add(cells, BorderPanel.Position.Center)
-
-    }
-
+    bilderPanel = new BilderPanel(controller)
+    createContents()
+    repaint()
   }
 
   def redraw = {
-    cells.redrawPanel
-    contents = new BorderPanel {
-      add(functionPanel, BorderPanel.Position.South)
-      add(picturesPanel, BorderPanel.Position.East)
-      add(new FlowPanel {
-      }, BorderPanel.Position.North)
-      add(cells, BorderPanel.Position.Center)
-    }
+    bilderPanel.redrawPanel
+    createContents()
     repaint()
   }
 
   def showAllpictures = {
-    cells.showAllPictures
-    contents = new BorderPanel {
-      add(functionPanel, BorderPanel.Position.South)
-      add(picturesPanel, BorderPanel.Position.East)
-      add(new FlowPanel {
-      }, BorderPanel.Position.North)
-      add(cells, BorderPanel.Position.Center)
-    }
+    bilderPanel.showAllPictures
+    createContents()
     repaint()
     Dialog.showMessage(message = "Spiel beendet")
   }

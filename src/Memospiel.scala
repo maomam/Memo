@@ -4,6 +4,8 @@ import view._
 import controller._
 import model._
 import util.Theme
+import view.TUI
+
 
 object Memospiel {
   val controller = new Controller(new Feld(4,Theme.fruits))

@@ -5,12 +5,15 @@ import util._
 import scala.swing.Reactor
 import util.Theme
 import java.io.IOException
+import controller.Controller
 
 
 class TUI(var controller: Controller) extends Reactor {
 listenTo(controller)
 
+
  printTui
+
   reactions += {
     case e: FeldResize => {printTui
       println(controller.statusText)}
@@ -29,10 +32,10 @@ listenTo(controller)
 
 println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
   		"q - Spiel verlassen,\n" +
-  		"l - Spiel lösen und beenden,\n" +
-  		"r - Spielfeld zurücksetzen,\n" +
+  		"l - Spiel lÃ¶sen und beenden,\n" +
+  		"r - Spielfeld zurÃ¼cksetzen,\n" +
   		"size <s> - Groesse dies Spielfelds veraendern (2,4 oder 8 eingeben),\n " +
-  		"<x> - Zelle mit der Nummer <x> öffnen")
+  		"<x> - Zelle mit der Nummer <x> Ã¶ffnen")
 
  var size = controller.feld.zellen.length
  def cellNumberToCoords(number:Int): (Int, Int) = {
@@ -42,10 +45,8 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
   
   def printTui = {
     println("DAS SPIELFELD:")
-    println(fieldToString)
-    
+    println(fieldToString) 
   }
-  
   
   def readInput(eingabe: String) = {
     var continue = true
@@ -68,11 +69,11 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
         if (number >= 1 && number <= fieldDim*fieldDim){
           controller.selectCell(cellNumberToCoords(number)) 
         }
-        else{ println("Falsche Eingabe. Bitet Spielfeldgrösse beachten")}
+        else{ println("Falsche Eingabe. Bitet SpielfeldgrÃ¶sse beachten")}
       }
        catch {
-         case  ioe: IOException => println("Falsche Eingabe. Bitte Zahl eingeben")
-         case  e: Exception => println("Falsche Eingabe. Bitte Zahl eingeben")
+         case  ioe: IOException => println("IOException. Falsche Eingabe. Bitte Zahl eingeben")
+         case  e: Exception => println("Unbekannte Exception. Falsche Eingabe. Bitte Zahl eingeben")
       }
       }
     
