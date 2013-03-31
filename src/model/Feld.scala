@@ -72,9 +72,10 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value) {
     tempOpenCellsSet.clear
     counterGuessed = 0
     gameIsOver = false
+    dimension = newFieldSize
     zellen = generateCells(newFieldSize)
     setPictures(newFieldSize)
-    dimension = newFieldSize
+    
   }
 
   def solve: Unit = {

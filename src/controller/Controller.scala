@@ -24,7 +24,7 @@ case class ThemeChanged(newTheme: Theme.Value) extends Event
 class Controller(var feld: Feld) extends Publisher {
   var statusText = "Spiel angefangen"
 
-  def solve = { feld.solve; statusText = "Spiel beendet"; publish(new FieldSolved) }
+  def solve = { feld.solve; statusText = "Spiel gelöst"; publish(new FieldSolved) }
 
   def changeTheme(newTheme: Theme.Value) = {
     if (feld.currentTheme != newTheme) {
@@ -43,7 +43,8 @@ class Controller(var feld: Feld) extends Publisher {
    chgCells.openedCell match {
      case Some(coords) => publish(new CellOpened(coords))
    }
-   if(feld.gameOver) publish(new GameOver)
+   if(feld.gameOver) { statusText ="Spiel ist beendet"
+     publish(new GameOver)}
   }
 
   def reset = {
@@ -54,7 +55,7 @@ class Controller(var feld: Feld) extends Publisher {
   }
   
   def resize(newSize:Int) ={
-    if(newSize!=feld.dimension){
+    if(newSize != feld.dimension){
       feld.resize(newSize)
       statusText="Spielgrösse verändert" 
       publish(new FeldResize(newSize))
@@ -67,7 +68,8 @@ class Controller(var feld: Feld) extends Publisher {
   def pictureNr (c :Coordinates) : Int ={
     feld(c._1, c._2).pictureNr
   }
- def fieldSize =feld.dimension
+  
+  def fieldSize = feld.dimension
  
   def currentTheme = feld.currentTheme
 

@@ -106,13 +106,14 @@ class GUI(controller: Controller) extends Frame {
   createContents()
    
   def createContents(): Unit =
-    contents = new BorderPanel {
+      contents = new BorderPanel {
       add(functionPanel, BorderPanel.Position.South)
       add(picturesPanel, BorderPanel.Position.East)
-      add(new FlowPanel {
-      }, BorderPanel.Position.North)
       add(bilderPanel, BorderPanel.Position.Center)
+      revalidate()
+      repaint()
       visible = true
+       
     }
 
   

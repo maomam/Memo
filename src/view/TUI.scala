@@ -19,7 +19,6 @@ listenTo(controller)
       println(controller.statusText)}
     case e: FieldSolved => {printTui
       println(controller.statusText)}
-    
     case e: FieldReset => {printTui
       println(controller.statusText)}
     case e: CellsGuessed => printTui
@@ -35,9 +34,10 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
   		"l - Spiel lösen und beenden,\n" +
   		"r - Spielfeld zurücksetzen,\n" +
   		"size <s> - Groesse dies Spielfelds veraendern (2,4 oder 8 eingeben),\n " +
+  		"theme <y> -Thema mit der Nummer y öffnen"+
   		"<x> - Zelle mit der Nummer <x> öffnen")
 
- var size = controller.feld.zellen.length
+ 
  def cellNumberToCoords(number:Int): (Int, Int) = {
     val fieldD= controller.feld.dimension
     ((number - 1) / fieldD, (number - 1) % fieldD)
@@ -62,10 +62,14 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
       case "size 4" => controller.resize(4); 
       case "size 6" => controller.resize(6); 
       case "size 2" => controller.resize(2);
+      case "theme 1" => controller.changeTheme(Theme.people)
+      case "theme 2" => controller.changeTheme(Theme.countries)
+      case "theme 3" => controller.changeTheme(Theme.fashion)
+      case "theme 4" => controller.changeTheme(Theme.fruits)
       case numberString => {
         try {
         val number = numberString.toInt
-        val fieldDim = controller.feld.dimension
+        val fieldDim = controller.fieldSize
         if (number >= 1 && number <= fieldDim*fieldDim){
           controller.selectCell(cellNumberToCoords(number)) 
         }

@@ -18,11 +18,10 @@ class BilderPanel(controller: Controller) extends GridPanel(controller.fieldSize
 
   val imageDirectory = "src/images/"
   val unguessedIcon = new ImageIcon("src/images/ControlPictures/question.png")
-  var allButtons = Array.ofDim[Button](controller.fieldSize, controller.fieldSize)
+  val allButtons = createButtons()
+  
   
   listenTo(controller)
-  //TODO: make this method return an array of buttons
-  createButtons
   reactions += {
     case e: CellsGuessed => {
       hideButtons(e.guessedCells)
@@ -31,7 +30,7 @@ class BilderPanel(controller: Controller) extends GridPanel(controller.fieldSize
       closeButtons(e.cellsToClose)
     }
     case e: CellOpened =>
-     openButton(e.cellToOpen)
+      openButton(e.cellToOpen)
   }
 
   private def hideButtons(c: List[Coordinates]): Unit =
@@ -57,7 +56,9 @@ class BilderPanel(controller: Controller) extends GridPanel(controller.fieldSize
   }
 
   private def openButton(c: Coordinates): Unit = {
-    println ("(" + c._1 + ", " + c._2 + ")")
+    //println ("(" + c._1 + ", " + c._2 + ")")
+    println(allButtons.length + " = " + controller.fieldSize)
+    println(allButtons(1).length)
     allButtons(c._1)(c._2).icon = findPicture(c._1, c._2)
   }
 
@@ -70,27 +71,38 @@ class BilderPanel(controller: Controller) extends GridPanel(controller.fieldSize
     icon = unguessedIcon
   }
 
-  def createButtons {
-    for (m <- 0 to (controller.fieldSize - 1)) {
-      for (n <- 0 to (controller.fieldSize - 1)) {
-        var buttons = button(m, n)
-        allButtons(m)(n) = buttons
-        contents += buttons
-      }
+  def createButtons(): Array[Array[Button]] = {
+    contents.clear
+    val temp = Array.ofDim[Button](controller.fieldSize, controller.fieldSize)
+    for (
+      i <- 0 to controller.fieldSize - 1;
+      j <- 0 to controller.fieldSize - 1;
+      b = button(i, j)
+    ) {
+      temp(i)(j) = b
+      contents += b
+      revalidate()
+      repaint()
+     
     }
+    println ("field size = " + controller.fieldSize + " = " + temp.length)
+    temp
   }
 
   def redrawPanel = {
-    allButtons = Array.ofDim[Button](controller.fieldSize, controller.fieldSize)
-    createButtons
+     for (r <- 0 to (controller.fieldSize - 1)) {
+      for (c <- 0 to (controller.fieldSize - 1)) {
+        allButtons(r)(c).icon = unguessedIcon
+      }
+    }
     repaint
   }
-
+//merge these two into one
   def showAllPictures = {
-    redrawPanel
     for (r <- 0 to (controller.fieldSize - 1)) {
       for (c <- 0 to (controller.fieldSize - 1)) {
         allButtons(r)(c).icon = findPicture(r, c)
+        allButtons(r)(c).visible = true
       }
     }
 
