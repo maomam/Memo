@@ -1,4 +1,4 @@
-package util
+package model
 
 object Theme extends Enumeration {
 type Theme = Value 

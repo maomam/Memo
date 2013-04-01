@@ -1,7 +1,8 @@
 package model
 
 import model._
-import util.Theme
+
+
 
 class Feld(var dimension: Int, var currentTheme: Theme.Value) {
   require(List(2, 6, 4, 8).contains(dimension))
@@ -84,16 +85,18 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value) {
         zellen(i)(j).guessed = true
       }
     }
+    tempOpenCellsSet.clear
     gameIsOver = true
+    counterGuessed = 0
   }
 
   def isMatch(coords1: (Int, Int), coords2: (Int, Int)): Boolean =
     !this(coords1).guessed && !this(coords2).guessed &&
       (this(coords1).pictureNr == this(coords2).pictureNr)
 
-  def openCellsToString(s: scala.collection.mutable.Set[(Int, Int)]) = {
+  /*def openCellsToString(s: scala.collection.mutable.Set[(Int, Int)]) = {
     s.foreach(x => println(x))
-  }
+  }*/
 
   def closeOpenCells(): Unit = {
     tempOpenCellsSet.foreach(coords => this(coords).open = false)

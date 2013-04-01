@@ -3,9 +3,9 @@ import controller._
 import model._
 import util._
 import scala.swing.Reactor
-import util.Theme
 import java.io.IOException
 import controller.Controller
+import model.Theme
 
 
 class TUI(var controller: Controller) extends Reactor {
@@ -86,8 +86,8 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
     continue
   }
    def fieldToString= {
-     val feld =controller.feld
-     val dim =feld.dimension
+    val feld =controller.feld
+    val dim =controller.fieldSize
     val lineseparator = ("+--" + ("--" * (dim / 2))) * dim + "+\n"
     val line = ("|" + (" " * (dim / 2)) + ("xx" + (" " * (dim / 2)))) * dim + "|\n"
     var box = "\n" + (lineseparator + (line)) * dim + lineseparator
@@ -96,16 +96,21 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
       for (spalte <- 0 to dim - 1) {
 
         if (feld(reihe, spalte).guessed == false) {
-          (box = box.replaceFirst("xx", feld(reihe, spalte).open.toString()))
-          (box = box.replaceFirst("false", n.toString.padTo(2," ").mkString))
-          (box = box.replaceFirst("true", "##"))
-        } else {
-          controller.currentTheme match {
-            case Theme.people =>  (box = box.replaceFirst("xx", "**"))
-            case Theme.fruits => (box = box.replaceFirst("xx", ":-"))
-            case Theme.countries => (box = box.replaceFirst("xx", "OO"))
+          if(feld(reihe, spalte).open){
+            controller.currentTheme match {
+            case Theme.people =>  (box = box.replaceFirst("xx", ":)"))
+            case Theme.fruits => (box = box.replaceFirst("xx", "00"))
+            case Theme.countries => (box = box.replaceFirst("xx", "??"))
             case Theme.fashion => (box = box.replaceFirst("xx", "<>"))
               }
+          }
+            else {
+              box = box.replaceFirst("xx", n.toString.padTo(2," ").mkString)
+            }
+          }
+         else {
+           box = box.replaceFirst("xx", "  ")
+              
         }
        n+=1
       }

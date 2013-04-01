@@ -3,8 +3,8 @@
 import view._
 import controller._
 import model._
-import util.Theme
 import view.TUI
+import model.Theme
 
 
 object Memospiel {

@@ -1,4 +1,4 @@
-package test
+package testModel
 
 import org.junit.runner.RunWith
 import model._

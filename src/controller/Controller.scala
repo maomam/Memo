@@ -5,10 +5,9 @@ import scala.swing.event.Event
 import scala.math.sqrt
 import scala.util.Random
 import model._
-import util.Theme
-import util._
 import javax.swing.JOptionPane
-import util.Theme
+
+
 
 
 

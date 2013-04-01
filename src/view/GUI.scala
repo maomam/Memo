@@ -5,8 +5,8 @@ import scala.swing._
 import scala.swing.Swing.LineBorder
 import scala.swing.event._
 import javax.swing.ImageIcon
-import util.Theme
 import controller._
+
 
 class CellClicked(val row: Int, val column: Int) extends Event
 
@@ -101,7 +101,9 @@ class GUI(controller: Controller) extends Frame {
     preferredSize_=(new Dimension(120, 60))
     icon = countriesIcon
   }
-
+  /*def gridPanel = new GridPanel(controller.fieldSize, controller.fieldSize) {
+    contents += bilderPanel
+ }*/
  
   createContents()
    
