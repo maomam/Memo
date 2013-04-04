@@ -5,10 +5,10 @@ import scala.swing.event.Event
 import scala.math.sqrt
 import scala.util.Random
 import model._
+import util.Observable
+import util.ListenerManager
 import javax.swing.JOptionPane
-
-
-
+import util.Theme
 
 
 case class GameOver extends Event
@@ -62,7 +62,7 @@ class Controller(var feld: Feld) extends Publisher {
     else statusText ="Das Spiel ist schon in der geforderten grösse"
   }
   
-  
+ 
 
   def pictureNr (c :Coordinates) : Int ={
     feld(c._1, c._2).pictureNr

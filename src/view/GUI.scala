@@ -1,22 +1,23 @@
 package view
 import controller.Controller
-import model._
+import util.Observable
+import util.Observer
 import scala.swing._
 import scala.swing.Swing.LineBorder
 import scala.swing.event._
 import javax.swing.ImageIcon
 import controller._
+import util.Theme
 
 
 class CellClicked(val row: Int, val column: Int) extends Event
 
 class GUI(controller: Controller) extends Frame {
   private val picturesPath = "src/images/ControlPictures/"
-  //TODO: Rename var into val, path
   var peopleIcon = new ImageIcon(picturesPath + "People.png")
   var fruitsIcon = new ImageIcon(picturesPath + "fruits.png")
-  var fashionIcon = new ImageIcon("src/images/ControlPictures/fashion.png")
-  var countriesIcon = new ImageIcon("src/images/ControlPictures/countries.png")
+  var fashionIcon = new ImageIcon(picturesPath + "fashion.png")
+  var countriesIcon = new ImageIcon(picturesPath+ "countries.png")
   var statusline = new Label(controller.statusText)
   var bilderPanel = new BilderPanel(controller)
 
@@ -101,10 +102,7 @@ class GUI(controller: Controller) extends Frame {
     preferredSize_=(new Dimension(120, 60))
     icon = countriesIcon
   }
-  /*def gridPanel = new GridPanel(controller.fieldSize, controller.fieldSize) {
-    contents += bilderPanel
- }*/
- 
+  
   createContents()
    
   def createContents(): Unit =
@@ -115,7 +113,7 @@ class GUI(controller: Controller) extends Frame {
       revalidate()
       repaint()
       visible = true
-       
+          
     }
 
   
@@ -146,6 +144,7 @@ class GUI(controller: Controller) extends Frame {
   }
 
   def resize(newSize: Int) = {
+    bilderPanel.deafTo(controller)
     bilderPanel = new BilderPanel(controller)
     createContents()
     repaint()

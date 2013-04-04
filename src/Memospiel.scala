@@ -4,7 +4,7 @@ import view._
 import controller._
 import model._
 import view.TUI
-import model.Theme
+import util.Theme
 
 
 object Memospiel {

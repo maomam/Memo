@@ -1,7 +1,6 @@
 package view
 
 import model.Coordinates
-import model._
 import controller._
 import scala.swing._
 import scala.swing.event._
@@ -18,9 +17,9 @@ class BilderPanel(controller: Controller) extends GridPanel(controller.fieldSize
 
   val imageDirectory = "src/images/"
   val unguessedIcon = new ImageIcon("src/images/ControlPictures/question.png")
-  val allButtons = createButtons()
+  var allButtons = createButtons()
   
-  
+  deafTo(controller)
   listenTo(controller)
   reactions += {
     case e: CellsGuessed => {

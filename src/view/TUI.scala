@@ -1,11 +1,12 @@
 package view
+
 import controller._
-import model._
-import util._
 import scala.swing.Reactor
 import java.io.IOException
 import controller.Controller
-import model.Theme
+import util.Theme
+import util.Observable
+import util.Observer
 
 
 class TUI(var controller: Controller) extends Reactor {
