@@ -64,8 +64,7 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value) {
       for (j <- 0 to dimension - 1) {
         zellen(i)(j).pictureNr = 0
         zellen(i)(j).guessed = false
-        //Zelle.open set in previous line
-      }
+        }
     }
     setPictures(dimension)
   }
@@ -95,10 +94,7 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value) {
     !this(coords1).guessed && !this(coords2).guessed &&
       (this(coords1).pictureNr == this(coords2).pictureNr)
 
-  /*def openCellsToString(s: scala.collection.mutable.Set[(Int, Int)]) = {
-    s.foreach(x => println(x))
-  }*/
-
+  
   def closeOpenCells(): Unit = {
     tempOpenCellsSet.foreach(coords => this(coords).open = false)
     tempOpenCellsSet.clear

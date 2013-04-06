@@ -5,8 +5,6 @@ import scala.swing.event.Event
 import scala.math.sqrt
 import scala.util.Random
 import model._
-import util.Observable
-import util.ListenerManager
 import javax.swing.JOptionPane
 import util.Theme
 
@@ -41,6 +39,7 @@ class Controller(var feld: Feld) extends Publisher {
    if(!chgCells.guessedCells.isEmpty) publish(new CellsGuessed(chgCells.guessedCells))
    chgCells.openedCell match {
      case Some(coords) => publish(new CellOpened(coords))
+     case None => 
    }
    if(feld.gameOver) { statusText ="Spiel ist beendet"
      publish(new GameOver)}

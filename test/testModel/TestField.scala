@@ -5,7 +5,6 @@ import model._
 import util._
 import org.specs2.mutable._
 
-
 //@RunWith(classOf[JUnitRunner])
 class TestField extends SpecificationWithJUnit {
   "Field" should {
@@ -56,39 +55,42 @@ class TestField extends SpecificationWithJUnit {
     "field hit" in {
       field(0, 0).open must be_==(true)
       field(1, 0).open must be_==(true)
-     
+
     }
   }
-  
-   "guessed field" should {
+
+  "guessed field" should {
     val field = new Feld(2, Theme.fruits)
+    var one =field(0,0).pictureNr
+    var two =field(0,0).pictureNr
     field.tryOpen(0, 0)
     field.tryOpen(1, 1)
     field.tryOpen(1, 1)
-    
+
     field.tryOpen(1, 0)
     field.tryOpen(0, 1)
-    
-     field.tryOpen(0, 0)
-     field.tryOpen(1, 0)
-     
-      field.tryOpen(0, 1)
-      field.tryOpen(1, 1)
-      
-       field.tryOpen(1, 0)
-       field.tryOpen(1, 1)
-       
-       field.tryOpen(0, 0)
-       field.tryOpen(0, 1)
-       
-          
+
+    field.tryOpen(0, 0)
+    field.tryOpen(1, 0)
+
+    field.tryOpen(0, 1)
+    field.tryOpen(1, 1)
+
+    field.tryOpen(1, 0)
+    field.tryOpen(1, 1)
+
+    field.tryOpen(0, 0)
+    field.tryOpen(0, 1)
+
     "field hit" in {
       field(0, 0).guessed must be_==(true)
       field(1, 0).guessed must be_==(true)
       field(0, 1).guessed must be_==(true)
       field(1, 1).guessed must be_==(true)
       field.gameOver must be_==(true)
-     
+
     }
   }
+  
+  
 }

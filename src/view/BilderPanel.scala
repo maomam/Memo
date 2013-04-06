@@ -16,7 +16,7 @@ import java.io.File
 class BilderPanel(controller: Controller) extends GridPanel(controller.fieldSize, controller.fieldSize) {
 
   val imageDirectory = "src/images/"
-  val unguessedIcon = new ImageIcon("src/images/ControlPictures/question.png")
+  val unguessedIcon = new ImageIcon(imageDirectory + "ControlPictures/question.png")
   var allButtons = createButtons()
   
   deafTo(controller)
@@ -47,15 +47,11 @@ class BilderPanel(controller: Controller) extends GridPanel(controller.fieldSize
     addressString.append("/")
     addressString.append(fileName)
     addressString.append(".jpg")
-    var imgURL = new File(addressString.toString)
-    var image: Image = ImageIO.read(imgURL)
-    //see if we can simplify this method
-    val newIcon = new ImageIcon(image);
+    val newIcon = new ImageIcon(addressString.toString);
     newIcon
   }
 
   private def openButton(c: Coordinates): Unit = {
-    //println ("(" + c._1 + ", " + c._2 + ")")
     println(allButtons.length + " = " + controller.fieldSize)
     println(allButtons(1).length)
     allButtons(c._1)(c._2).icon = findPicture(c._1, c._2)
@@ -66,7 +62,6 @@ class BilderPanel(controller: Controller) extends GridPanel(controller.fieldSize
     action = Action("") {
       controller.selectCell(Row, Column)
     }
-    //Why the hell does this matter?
     icon = unguessedIcon
   }
 
@@ -88,23 +83,18 @@ class BilderPanel(controller: Controller) extends GridPanel(controller.fieldSize
     temp
   }
 
-  def redrawPanel = {
+  def redrawPanel (isGameOver: Boolean)= {
      for (r <- 0 to (controller.fieldSize - 1)) {
       for (c <- 0 to (controller.fieldSize - 1)) {
-        allButtons(r)(c).icon = unguessedIcon
+        if(isGameOver){
+        allButtons(r)(c).icon = findPicture(r, c)
+        allButtons(r)(c).visible = true
+        
+        }else{allButtons(r)(c).icon = unguessedIcon}
       }
     }
     repaint
   }
-//merge these two into one
-  def showAllPictures = {
-    for (r <- 0 to (controller.fieldSize - 1)) {
-      for (c <- 0 to (controller.fieldSize - 1)) {
-        allButtons(r)(c).icon = findPicture(r, c)
-        allButtons(r)(c).visible = true
-      }
-    }
 
-  }
 
 }

@@ -1,7 +1,5 @@
 package view
 import controller.Controller
-import util.Observable
-import util.Observer
 import scala.swing._
 import scala.swing.Swing.LineBorder
 import scala.swing.event._
@@ -25,10 +23,10 @@ class GUI(controller: Controller) extends Frame {
   title = "Memospiel"
   reactions += {
     case e: FeldResize => resize(e.newSize)
-    case e: FieldSolved => showAllpictures
-    case e: FieldReset => redraw
-    case e: GameOver => endGame
-    case e: ThemeChanged => redraw
+    case e: FieldSolved => redraw(true)
+    case e: FieldReset => redraw(false)
+    case e: GameOver => redraw(true)
+    case e: ThemeChanged => redraw(false)
   }
  
   val resetGame = new Button {
@@ -135,14 +133,7 @@ class GUI(controller: Controller) extends Frame {
     contents += countries
   }
 
-  def endGame = {
-    bilderPanel.showAllPictures
-    createContents()
-    repaint()
-    Dialog.showMessage(message = "Spiel gelöst")
-
-  }
-
+ 
   def resize(newSize: Int) = {
     bilderPanel.deafTo(controller)
     bilderPanel = new BilderPanel(controller)
@@ -150,16 +141,12 @@ class GUI(controller: Controller) extends Frame {
     repaint()
   }
 
-  def redraw = {
-    bilderPanel.redrawPanel
+  def redraw(isThisGameOver: Boolean) = {
+    bilderPanel.redrawPanel(isThisGameOver)
+    if(isThisGameOver){Dialog.showMessage(message = "Spiel beendet")}
     createContents()
     repaint()
   }
 
-  def showAllpictures = {
-    bilderPanel.showAllPictures
-    createContents()
-    repaint()
-    Dialog.showMessage(message = "Spiel beendet")
-  }
+ 
 }
