@@ -52,8 +52,6 @@ class BilderPanel(controller: Controller) extends GridPanel(controller.fieldSize
   }
 
   private def openButton(c: Coordinates): Unit = {
-    println(allButtons.length + " = " + controller.fieldSize)
-    println(allButtons(1).length)
     allButtons(c._1)(c._2).icon = findPicture(c._1, c._2)
   }
 

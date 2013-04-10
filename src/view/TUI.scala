@@ -5,8 +5,6 @@ import scala.swing.Reactor
 import java.io.IOException
 import controller.Controller
 import util.Theme
-import util.Observable
-import util.Observer
 
 
 class TUI(var controller: Controller) extends Reactor {
@@ -25,7 +23,8 @@ listenTo(controller)
     case e: CellsGuessed => printTui
     case e: CellsClosed => printTui
     case e: CellOpened => printTui
-    case e: GameOver => println(controller.statusText)
+    case e: GameOver => {printSolved
+      println(controller.statusText) }
     case e: ThemeChanged => {printTui 
       println(controller.statusText)}
   }
@@ -47,6 +46,11 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
   def printTui = {
     println("DAS SPIELFELD:")
     println(fieldToString) 
+  }
+  
+  def printSolved ={
+    println("DAS SPIELFELD:")
+    println(solved) 
   }
   
   def readInput(eingabe: String) = {
@@ -118,4 +122,23 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
     }
     box
   }
+   def solved ={
+    val feld =controller.feld
+    val dim =controller.fieldSize
+    val lineseparator = ("+--" + ("--" * (dim / 2))) * dim + "+\n"
+    val line = ("|" + (" " * (dim / 2)) + ("xx" + (" " * (dim / 2)))) * dim + "|\n"
+    var box = "\n" + (lineseparator + (line)) * dim + lineseparator
+     for (reihe <- 0 to dim - 1) {
+      for (spalte <- 0 to dim - 1) {
+       controller.currentTheme match {
+            case Theme.people =>  (box = box.replaceFirst("xx", ":)"))
+            case Theme.fruits => (box = box.replaceFirst("xx", "00"))
+            case Theme.countries => (box = box.replaceFirst("xx", "??"))
+            case Theme.fashion => (box = box.replaceFirst("xx", "<>"))
+              }
+      }
+    }
+    box
+   }
+   
 }

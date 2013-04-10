@@ -2,8 +2,7 @@ package model
 
 import model._
 import util.Theme
-
-
+import scala.util._
 
 class Feld(var dimension: Int, var currentTheme: Theme.Value) {
   require(List(2, 6, 4, 8).contains(dimension))
@@ -46,6 +45,7 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value) {
       }
       isThisPictureSet = false
     }
+   
   }
 
   def setTheme(newTheme: Theme.Value) = {
@@ -64,7 +64,7 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value) {
       for (j <- 0 to dimension - 1) {
         zellen(i)(j).pictureNr = 0
         zellen(i)(j).guessed = false
-        }
+      }
     }
     setPictures(dimension)
   }
@@ -76,7 +76,7 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value) {
     dimension = newFieldSize
     zellen = generateCells(newFieldSize)
     setPictures(newFieldSize)
-    
+
   }
 
   def solve: Unit = {
@@ -91,10 +91,8 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value) {
   }
 
   def isMatch(coords1: (Int, Int), coords2: (Int, Int)): Boolean =
-    !this(coords1).guessed && !this(coords2).guessed &&
-      (this(coords1).pictureNr == this(coords2).pictureNr)
+       this(coords1).pictureNr == this(coords2).pictureNr
 
-  
   def closeOpenCells(): Unit = {
     tempOpenCellsSet.foreach(coords => this(coords).open = false)
     tempOpenCellsSet.clear
