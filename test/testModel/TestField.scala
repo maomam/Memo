@@ -4,9 +4,10 @@ import org.junit.runner.RunWith
 import model._
 import util._
 import org.specs2.mutable._
+import org.specs2.runner.JUnitRunner
 import scala.collection.immutable.ListMap
 
-//@RunWith(classOf[JUnitRunner])
+@RunWith(classOf[JUnitRunner])
 class TestField extends SpecificationWithJUnit {
   "Field" should {
     val field = new Feld(2, Theme.fruits)
@@ -16,6 +17,7 @@ class TestField extends SpecificationWithJUnit {
       field(1, 1).pictureNr must not be_== (0)
       field(0, 1).pictureNr must not be_== (0)
       field(1, 0).pictureNr must not be_== (0)
+      field.closeOpenCells
       field.anzahlZellen must be_==(3)
       field.tempOpenCellsSet.size must be_==(0)
       field.gameOver must be_==(false)
@@ -68,16 +70,18 @@ class TestField extends SpecificationWithJUnit {
   "closeOpenCells test" should {
     val field = new Feld(2, Theme.fruits)
     field.tryOpen(0, 0)
+    field.tryOpen(0, 1)
     field.closeOpenCells
     "closeCells" in {
       field(0, 0).open must be_==(false)
+      field(1, 1).open must be_==(false)
 
     }
   }
-  
-    "OpenCell" should {
+
+  "OpenCell" should {
     val field = new Feld(2, Theme.fruits)
-   field.openCell(0,0)
+    field.openCell(0, 0)
     "closeCells" in {
       field(0, 0).open must be_==(true)
 
@@ -92,45 +96,76 @@ class TestField extends SpecificationWithJUnit {
     var coordstwo: Coordinates = keys(1)
     var coordsthree: Coordinates = keys(2)
     var coordsfour: Coordinates = keys(3)
-    
-    "field hit" in {
-      field.isMatch((coordsone._1, coordsone._2),(coordstwo._1, coordstwo._2)) must be_==(true)
+
+    "field match" in {
+      field.isMatch((coordsone._1, coordsone._2), (coordstwo._1, coordstwo._2)) must be_==(true)
 
     }
   }
 
   "guessed field" should {
-    val field = new Feld(2, Theme.fruits)
-    var coordinates = ListMap(Map((0, 0) -> field(0, 0).pictureNr, (0, 1) -> field(0, 1).pictureNr, (1, 1) -> field(1, 1).pictureNr, (1, 0) -> field(1, 0).pictureNr).toList.sortBy { _._2 }: _*)
+    val field1 = new Feld(2, Theme.fruits)
+    var coordinates = ListMap(
+        Map((0, 0) -> field1(0, 0).pictureNr, 
+            (0, 1) -> field1(0, 1).pictureNr, 
+            (1, 1) -> field1(1, 1).pictureNr, 
+            (1, 0) -> field1(1, 0).pictureNr
+        ).toList.sortBy { _._2 }: _*)
     var keys = coordinates.keys.toSeq
     var coordsone: Coordinates = keys(0)
     var coordstwo: Coordinates = keys(1)
     var coordsthree: Coordinates = keys(2)
     var coordsfour: Coordinates = keys(3)
-    field.tryOpen(coordsone._1, coordsone._2)
-    field.tryOpen(coordsthree._1, coordsthree._2)
-    field.tryOpen(coordstwo._1, coordstwo._2)
-    field.tryOpen(coordstwo._1, coordstwo._2)
+   
+    "first hit" in {
+      field1.tryOpen(coordsone._1, coordsone._2)
+      field1.tempOpenCellsSet.size must be_==(1)
+      //ok
+    }
+    
+    
+    
+    "second hit" in {
+      field1.tryOpen(coordsthree._1, coordsthree._2)
+      //field(coordsthree._1, coordsthree._2).guessed must be_==(false)
+      //field1(coordsthree._1, coordsthree._2).open must be_==(true)
+      //field(coordsone._1, coordsone._2).guessed must be_==(false)
+     // field1(coordsone._1, coordsone._2).open must be_==(true)
+      //field1.tempOpenCellsSet.size must contain(coordsthree)
+      field1.tempOpenCellsSet.size mustEqual 2
+    }
+    
+    field1.tryOpen(coordstwo._1, coordstwo._2)
+    
+    "third hit" in {
+      //field(coordsthree._1, coordsthree._2).guessed must be_==(false)
+      //field1(coordsthree._1, coordsthree._2).open must be_==(false)
+      //field(coordsone._1, coordsone._2).guessed must be_==(false)
+      //field1(coordsone._1, coordsone._2).open must be_==(false)
+      // field1(coordstwo._1, coordstwo._2).open must be_==(true)
+      field1.tempOpenCellsSet.size must be_==(1)
+    }
+    field1.tryOpen(coordstwo._1, coordstwo._2)
     //two times the same cell chosen
     //three not guessed. different pictureNr
-    field.tryOpen(coordsfour._1, coordsfour._2)
+    field1.tryOpen(coordsfour._1, coordsfour._2)
     //four not guessed
-    field.tryOpen(coordsone._1, coordsone._2)
-    field.tryOpen(coordstwo._1, coordstwo._2)
+    field1.tryOpen(coordsone._1, coordsone._2)
+    field1.tryOpen(coordstwo._1, coordstwo._2)
     //one and two are now guessed
-    field.tryOpen(coordsone._1, coordsone._2)
-    field.tryOpen(coordstwo._1, coordstwo._2)
+    field1.tryOpen(coordsone._1, coordsone._2)
+    field1.tryOpen(coordstwo._1, coordstwo._2)
     //guessed cells clicked
-    field.tryOpen(coordsthree._1, coordsthree._2)
-    field.tryOpen(coordsfour._1, coordsfour._2)
+    field1.tryOpen(coordsthree._1, coordsthree._2)
+    field1.tryOpen(coordsfour._1, coordsfour._2)
     //all guessed game over
-    "field hit" in {
-      field(0, 0).guessed must be_==(true)
-      field(1, 0).guessed must be_==(true)
-      field(0, 1).guessed must be_==(true)
-      field(1, 1).guessed must be_==(true)
-      field.gameOver must be_==(true)
-      field.gameIsOver must be_==(true)
+    "field solved" in {
+      field1(0, 0).guessed must be_==(true)
+      field1(1, 0).guessed must be_==(true)
+      field1(0, 1).guessed must be_==(true)
+      field1(1, 1).guessed must be_==(true)
+      field1.gameOver must be_==(true)
+      field1.gameIsOver must be_==(true)
 
     }
   }
