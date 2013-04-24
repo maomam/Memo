@@ -9,6 +9,8 @@ import scala.collection.immutable.ListMap
 
 @RunWith(classOf[JUnitRunner])
 class TestField extends SpecificationWithJUnit {
+  
+  sequential
   "Field" should {
     val field = new Feld(2, Theme.fruits)
     "dimension" in {
@@ -40,6 +42,7 @@ class TestField extends SpecificationWithJUnit {
     }
 
   }
+  sequential
   "solved Field" should {
     val field = new Feld(2, Theme.fruits)
     "field solved" in {
@@ -54,7 +57,7 @@ class TestField extends SpecificationWithJUnit {
       field.gameIsOver must be_==(true)
     }
   }
-
+sequential
   "resized Field" should {
     val field = new Feld(2, Theme.fruits)
     field.resize(4)
@@ -66,8 +69,9 @@ class TestField extends SpecificationWithJUnit {
       field.dimension must be_==(4)
     }
   }
-
+sequential
   "closeOpenCells test" should {
+    sequential
     val field = new Feld(2, Theme.fruits)
     field.tryOpen(0, 0)
     field.tryOpen(0, 1)
@@ -78,7 +82,7 @@ class TestField extends SpecificationWithJUnit {
 
     }
   }
-
+sequential
   "OpenCell" should {
     val field = new Feld(2, Theme.fruits)
     field.openCell(0, 0)
@@ -87,7 +91,7 @@ class TestField extends SpecificationWithJUnit {
 
     }
   }
-
+sequential
   "isMatch" should {
     val field = new Feld(2, Theme.fruits)
     var coordinates = ListMap(Map((0, 0) -> field(0, 0).pictureNr, (0, 1) -> field(0, 1).pictureNr, (1, 1) -> field(1, 1).pictureNr, (1, 0) -> field(1, 0).pictureNr).toList.sortBy { _._2 }: _*)
@@ -102,8 +106,9 @@ class TestField extends SpecificationWithJUnit {
 
     }
   }
-
+sequential
   "guessed field" should {
+    sequential
     val field1 = new Feld(2, Theme.fruits)
     var coordinates = ListMap(
         Map((0, 0) -> field1(0, 0).pictureNr, 
@@ -117,13 +122,11 @@ class TestField extends SpecificationWithJUnit {
     var coordsthree: Coordinates = keys(2)
     var coordsfour: Coordinates = keys(3)
    
+    field1.tryOpen(coordsone._1, coordsone._2)
+    
     "first hit" in {
-      field1.tryOpen(coordsone._1, coordsone._2)
       field1.tempOpenCellsSet.size must be_==(1)
-      //ok
     }
-    
-    
     
     "second hit" in {
       field1.tryOpen(coordsthree._1, coordsthree._2)
@@ -169,6 +172,7 @@ class TestField extends SpecificationWithJUnit {
 
     }
   }
+sequential
   "4 dimension Field" should {
     val field = new Feld(4, Theme.countries)
     "4dimension" in {
