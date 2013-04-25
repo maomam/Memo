@@ -10,7 +10,7 @@ import scala.collection.immutable.ListMap
 @RunWith(classOf[JUnitRunner])
 class TestField extends SpecificationWithJUnit {
   
-  sequential
+ 
   "Field" should {
     val field = new Feld(2, Theme.fruits)
     "dimension" in {
@@ -42,7 +42,7 @@ class TestField extends SpecificationWithJUnit {
     }
 
   }
-  sequential
+
   "solved Field" should {
     val field = new Feld(2, Theme.fruits)
     "field solved" in {
@@ -57,7 +57,7 @@ class TestField extends SpecificationWithJUnit {
       field.gameIsOver must be_==(true)
     }
   }
-sequential
+
   "resized Field" should {
     val field = new Feld(2, Theme.fruits)
     field.resize(4)
@@ -69,7 +69,7 @@ sequential
       field.dimension must be_==(4)
     }
   }
-sequential
+
   "closeOpenCells test" should {
     sequential
     val field = new Feld(2, Theme.fruits)
@@ -82,7 +82,7 @@ sequential
 
     }
   }
-sequential
+
   "OpenCell" should {
     val field = new Feld(2, Theme.fruits)
     field.openCell(0, 0)
@@ -91,7 +91,7 @@ sequential
 
     }
   }
-sequential
+
   "isMatch" should {
     val field = new Feld(2, Theme.fruits)
     var coordinates = ListMap(Map((0, 0) -> field(0, 0).pictureNr, (0, 1) -> field(0, 1).pictureNr, (1, 1) -> field(1, 1).pictureNr, (1, 0) -> field(1, 0).pictureNr).toList.sortBy { _._2 }: _*)
@@ -106,7 +106,7 @@ sequential
 
     }
   }
-sequential
+
   "guessed field" should {
     sequential
     val field1 = new Feld(2, Theme.fruits)
@@ -172,7 +172,7 @@ sequential
 
     }
   }
-sequential
+
   "4 dimension Field" should {
     val field = new Feld(4, Theme.countries)
     "4dimension" in {

@@ -3,8 +3,9 @@ package testModel
 import org.junit.runner.RunWith
 import model._
 import org.specs2.mutable._
+import org.specs2.runner.JUnitRunner
 
-//@RunWith(classOf[JUnitRunner])
+@RunWith(classOf[JUnitRunner])
 class TestCell extends SpecificationWithJUnit{
   "Zelle" should{
     val zelle = new Zelle(0,0)
