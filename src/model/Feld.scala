@@ -7,7 +7,7 @@ import scala.util._
 class Feld(var dimension: Int, var currentTheme: Theme.Value) {
   require(List(2, 6, 4, 8).contains(dimension))
 
-  var anzahlZellen = dimension * dimension - 1
+
   var gameIsOver = false
   var counterGuessed = 0
   val tempOpenCellsSet = scala.collection.mutable.Set[Coordinates]()
@@ -94,6 +94,7 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value) {
        this(coords1).pictureNr == this(coords2).pictureNr
 
   def closeOpenCells(): Unit = {
+    //compiler generates a null check here, hence the extra branch
     tempOpenCellsSet.foreach(coords => this(coords).open = false)
     tempOpenCellsSet.clear
   }
