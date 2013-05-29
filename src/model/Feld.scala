@@ -8,7 +8,7 @@ class Feld(var dimension: Int, var currentTheme: Theme.Value) {
   require(List(2, 6, 4, 8).contains(dimension))
 
 
-  var gameIsOver = false
+  private var gameIsOver = false
   var counterGuessed = 0
   val tempOpenCellsSet = scala.collection.mutable.Set[Coordinates]()
 
