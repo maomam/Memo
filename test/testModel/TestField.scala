@@ -21,8 +21,7 @@ class TestField extends SpecificationWithJUnit {
       field.tempOpenCellsSet.size mustEqual 0
       field.counterGuessed mustEqual 0
       field.gameOver must be_==(false)
-      field.gameIsOver must be_==(false)
-    }
+     }
 
     "newTheme" in new liteContext {
       field.setTheme(Theme.people)
@@ -43,7 +42,7 @@ class TestField extends SpecificationWithJUnit {
       field.counterGuessed must be_==(0)
       field.tempOpenCellsSet.size must be_==(0)
       field.gameOver must be_==(false)
-      field.gameIsOver must be_==(false)
+    
     }
 
   }
@@ -59,7 +58,7 @@ class TestField extends SpecificationWithJUnit {
       field.tempOpenCellsSet.size must be_==(0)
       field.counterGuessed must be_==(0)
       field.gameOver must be_==(true)
-      field.gameIsOver must be_==(true)
+  
     }
   }
 
@@ -69,7 +68,7 @@ class TestField extends SpecificationWithJUnit {
       field.tempOpenCellsSet.size must be_==(0)
       field.counterGuessed must be_==(0)
       field.gameOver must be_==(false)
-      field.gameIsOver must be_==(false)
+     
       field.dimension must be_==(4)
     }
   }
@@ -103,7 +102,7 @@ class TestField extends SpecificationWithJUnit {
     "first hit" in new context {
       field.tryOpen(coordsone._1, coordsone._2)
       field.tempOpenCellsSet.size must be_==(1)
-      field.gameIsOver must be_==(false)
+     
     }
 
     "second hit" in new context {
@@ -153,7 +152,7 @@ class TestField extends SpecificationWithJUnit {
       field(0, 1).guessed must be_==(true)
       field(1, 1).guessed must be_==(true)
       field.gameOver must be_==(true)
-      field.gameIsOver must be_==(true)
+     
 
     }
   }

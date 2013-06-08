@@ -20,7 +20,7 @@ class TestController extends SpecificationWithJUnit {
       c.feld.counterGuessed must be_==(0)
       c.feld.tempOpenCellsSet.size must be_==(0)
       c.feld.gameOver must be_==(false)
-      c.feld.gameIsOver must be_==(false)
+      
     }
 
     "changeTheme" in new liteContext {
@@ -33,7 +33,7 @@ class TestController extends SpecificationWithJUnit {
 
     "gameOver" in new liteContext {
       c.solve
-      c.feld.gameIsOver must be_==(true)
+   
       c.feld.gameOver must be_==(true)
     }
   }
@@ -45,7 +45,7 @@ class TestController extends SpecificationWithJUnit {
       c.feld.counterGuessed must be_==(0)
       c.feld.tempOpenCellsSet.size must be_==(0)
       c.feld.gameOver must be_==(false)
-      c.feld.gameIsOver must be_==(false)
+     
     }
   }
   " reset Controller" should {
@@ -54,7 +54,7 @@ class TestController extends SpecificationWithJUnit {
       c.feld.counterGuessed must be_==(0)
       c.feld.tempOpenCellsSet.size must be_==(0)
       c.feld.gameOver must be_==(false)
-      c.feld.gameIsOver must be_==(false)
+     
       
     }
   }
@@ -86,7 +86,7 @@ class TestController extends SpecificationWithJUnit {
       c.feld(coordsfour).guessed must be_==(true)
       c.feld.counterGuessed mustEqual 2
       c.feld.gameOver must be_==(true)
-      c.feld.gameIsOver must be_==(true)
+     
     }
 
   }
