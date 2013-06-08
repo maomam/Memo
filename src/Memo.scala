@@ -7,7 +7,7 @@ import view.TUI
 import util.Theme
 
 
-object Memospiel {
+object Memo {
   val controller = new Controller(new Feld(4,Theme.fruits))
   val userTui = new TUI(controller)
   val userGui = new GUI(controller)

@@ -22,50 +22,58 @@ class GUI(controller: Controller) extends Frame {
   listenTo(controller)
   title = "Memospiel"
   reactions += {
-    case e: FeldResize => resize(e.newSize)
-    case e: FieldSolved => redraw(true)
-    case e: FieldReset => redraw(false)
-    case e: GameOver => redraw(true)
-    case e: ThemeChanged => redraw(false)
+    case e: FeldResize => {
+      statusline.text = controller.statusText
+      resize(e.newSize)
+    }
+    case e: FieldSolved => {
+      statusline.text = controller.statusText  
+      redraw(true)
+    }
+    case e: FieldReset => {
+      statusline.text = controller.statusText 
+      redraw(false)
+    }
+    case e: GameOver => {
+     statusline.text = controller.statusText 
+      redraw(true)
+    }
+    case e: ThemeChanged =>{ 
+      statusline.text = controller.statusText 
+      redraw(false)
+    }
   }
  
   val resetGame = new Button {
     action = Action("Spiel neu Starten") {
-      controller.reset
-      statusline.text = controller.statusText
-
-    }
+    controller.reset
+     }
   }
 
   val spiel6 = new Button {
     action = Action("Spielgroesse 6") {
       controller.resize(6)
-      statusline.text = controller.statusText
-    }
+         }
   }
   val spiel4 = new Button {
     action = Action("Spielgroesse 4") {
       controller.resize(4)
-      statusline.text = controller.statusText
-    }
+       }
   }
   val spiel8 = new Button {
     action = Action("Spielgroesse 8") {
       controller.resize(8)
-      statusline.text = controller.statusText
-    }
+      }
   }
   val spiel2 = new Button {
     action = Action("Spielgroesse 2") {
       controller.resize(2)
-      statusline.text = controller.statusText
-    }
+      }
   }
   val loesen = new Button {
     action = Action("Spiel loesen") {
       controller.solve
-      statusline.text = controller.statusText
-    }
+       }
   }
   
   val people = new Button {
@@ -143,7 +151,7 @@ class GUI(controller: Controller) extends Frame {
 
   def redraw(isThisGameOver: Boolean) = {
     bilderPanel.redrawPanel(isThisGameOver)
-    if(isThisGameOver){Dialog.showMessage(message = "Spiel beendet")}
+    if(isThisGameOver){Dialog.showMessage(message = "Spiel beendet. Sie haben " + controller.counter + " Zuege benoetigt.")}
     createContents()
     repaint()
   }
