@@ -17,14 +17,14 @@ case class CellOpened(cellToOpen: Coordinates) extends Event
 case class FeldResize(newSize: Int) extends Event
 case class ThemeChanged(newTheme: Theme.Value) extends Event
 
-class Controller(var feld: Feld) extends Publisher {
+class Controller(var field: Feld) extends Publisher {
   var statusText = "Spiel angefangen"
 
-  def solve = { feld.solve; statusText = "Spiel gelöst"; publish(new FieldSolved) }
+  def solve = { field.solve; statusText = "Spiel gelöst"; publish(new FieldSolved) }
 
   def changeTheme(newTheme: Theme.Value) = {
-    if (feld.currentTheme != newTheme) {
-      feld.setTheme(newTheme)
+    if (field.currentTheme != newTheme) {
+      field.setTheme(newTheme)
       statusText = "Thema der Bilder geändert"
       publish(new ThemeChanged(newTheme))
     } else {
@@ -35,7 +35,7 @@ class Controller(var feld: Feld) extends Publisher {
   }
 
   def selectCell(cellCoords: (Int, Int)) = {
-    val chgCells = feld.tryOpen(cellCoords._1, cellCoords._2)
+    val chgCells = field.tryOpen(cellCoords._1, cellCoords._2)
 
     if (!chgCells.closedCells.isEmpty) publish(new CellsClosed(chgCells.closedCells))
     if (!chgCells.guessedCells.isEmpty) publish(new CellsGuessed(chgCells.guessedCells))
@@ -43,22 +43,22 @@ class Controller(var feld: Feld) extends Publisher {
       case Some(coords) => publish(new CellOpened(coords))
       case None =>
     }
-    if (feld.gameOver) {
+    if (field.gameOver) {
       statusText = "Spiel ist beendet"
       publish(new GameOver)
     }
   }
 
   def reset = {
-    feld.reset
+    field.reset
     statusText = "Zellen werden zurückgesetzt"
     publish(new FieldReset)
 
   }
 
   def resize(newSize: Int) = {
-    if (newSize != feld.dimension) {
-      feld.resize(newSize)
+    if (newSize != field.dimension) {
+      field.resize(newSize)
       statusText = "Spielgrösse verändert"
       publish(new FeldResize(newSize))
     } else {
@@ -68,13 +68,13 @@ class Controller(var feld: Feld) extends Publisher {
   }
 
   def pictureNr(c: Coordinates): Int = {
-    feld(c._1, c._2).pictureNr
+    field(c._1, c._2).pictureNr
   }
 
-  def fieldSize = feld.dimension
+  def fieldSize = field.dimension
 
-  def currentTheme = feld.currentTheme
+  def currentTheme = field.currentTheme
   
-  def counter = feld.counterTried
+  def counter = field.counterTried
 
 }

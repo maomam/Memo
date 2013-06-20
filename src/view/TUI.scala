@@ -39,7 +39,7 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
 
  
  def cellNumberToCoords(number:Int): (Int, Int) = {
-    val fieldD= controller.feld.dimension
+    val fieldD= controller.field.dimension
     ((number - 1) / fieldD, (number - 1) % fieldD)
   }
   
@@ -91,7 +91,7 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
     continue
   }
    def fieldToString= {
-    val feld =controller.feld
+    val feld =controller.field
     val dim =controller.fieldSize
     val lineseparator = ("+--" + ("--" * (dim / 2))) * dim + "+\n"
     val line = ("|" + (" " * (dim / 2)) + ("xx" + (" " * (dim / 2)))) * dim + "|\n"
@@ -123,7 +123,7 @@ println("Sie haben folgende Auswahlmoeglichkeiten: \n" +
     box
   }
    def solved ={
-    val feld =controller.feld
+    val feld =controller.field
     val dim =controller.fieldSize
     val lineseparator = ("+--" + ("--" * (dim / 2))) * dim + "+\n"
     val line = ("|" + (" " * (dim / 2)) + ("xx" + (" " * (dim / 2)))) * dim + "|\n"

@@ -1,5 +1,7 @@
 
 
+package memogame
+
 import view._
 import controller._
 import model._

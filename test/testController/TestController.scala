@@ -17,9 +17,9 @@ class TestController extends SpecificationWithJUnit {
       c.pictureNr(coordstwo) mustEqual 1
       c.fieldSize must be_==(2)
       c.currentTheme must be_==(Theme.fashion)
-      c.feld.counterGuessed must be_==(0)
-      c.feld.tempOpenCellsSet.size must be_==(0)
-      c.feld.gameOver must be_==(false)
+      c.field.counterGuessed must be_==(0)
+      c.field.tempOpenCellsSet.size must be_==(0)
+      c.field.gameOver must be_==(false)
       
     }
 
@@ -34,7 +34,7 @@ class TestController extends SpecificationWithJUnit {
     "gameOver" in new liteContext {
       c.solve
    
-      c.feld.gameOver must be_==(true)
+      c.field.gameOver must be_==(true)
     }
   }
   " resized Controller" should {
@@ -42,18 +42,18 @@ class TestController extends SpecificationWithJUnit {
       c.resize(2)
       c.resize(4)
       c.fieldSize must be_==(4)
-      c.feld.counterGuessed must be_==(0)
-      c.feld.tempOpenCellsSet.size must be_==(0)
-      c.feld.gameOver must be_==(false)
+      c.field.counterGuessed must be_==(0)
+      c.field.tempOpenCellsSet.size must be_==(0)
+      c.field.gameOver must be_==(false)
      
     }
   }
   " reset Controller" should {
     "reset" in new liteContext {
       c.reset
-      c.feld.counterGuessed must be_==(0)
-      c.feld.tempOpenCellsSet.size must be_==(0)
-      c.feld.gameOver must be_==(false)
+      c.field.counterGuessed must be_==(0)
+      c.field.tempOpenCellsSet.size must be_==(0)
+      c.field.gameOver must be_==(false)
      
       
     }
@@ -62,16 +62,16 @@ class TestController extends SpecificationWithJUnit {
   " play Controller" should {
     "first hit" in new liteContext {
       c.selectCell(coordsone)
-      c.feld(coordsone).open must be_==(true)
-      c.feld.tempOpenCellsSet must contain(coordsone)
-      c.feld.tempOpenCellsSet.size mustEqual 1
+      c.field(coordsone).open must be_==(true)
+      c.field.tempOpenCellsSet must contain(coordsone)
+      c.field.tempOpenCellsSet.size mustEqual 1
     }
 
   }
   " solved Controller" should {
     "solve" in new liteContext {
       c.selectCell(coordstwo)
-       c.feld(coordstwo).open must be_==(true)
+       c.field(coordstwo).open must be_==(true)
       c.selectCell(coordstwo)
       c.selectCell(coordsfour)
       c.selectCell(coordsone)
@@ -80,12 +80,12 @@ class TestController extends SpecificationWithJUnit {
       c.selectCell(coordstwo)
       c.selectCell(coordsthree)
       c.selectCell(coordsfour)
-      c.feld(coordsone).guessed must be_==(true)
-      c.feld(coordstwo).guessed must be_==(true)
-      c.feld(coordsthree).guessed must be_==(true)
-      c.feld(coordsfour).guessed must be_==(true)
-      c.feld.counterGuessed mustEqual 2
-      c.feld.gameOver must be_==(true)
+      c.field(coordsone).guessed must be_==(true)
+      c.field(coordstwo).guessed must be_==(true)
+      c.field(coordsthree).guessed must be_==(true)
+      c.field(coordsfour).guessed must be_==(true)
+      c.field.counterGuessed mustEqual 2
+      c.field.gameOver must be_==(true)
      
     }
 
@@ -94,10 +94,10 @@ class TestController extends SpecificationWithJUnit {
     val f = new Feld(2, Theme.fashion)
     val c = new Controller(f)
     var coordinates = ListMap(
-      Map((0, 0) -> c.feld(0, 0).pictureNr,
-        (0, 1) -> c.feld(0, 1).pictureNr,
-        (1, 1) -> c.feld(1, 1).pictureNr,
-        (1, 0) -> c.feld(1, 0).pictureNr).toList.sortBy { _._2 }: _*)
+      Map((0, 0) -> c.field(0, 0).pictureNr,
+        (0, 1) -> c.field(0, 1).pictureNr,
+        (1, 1) -> c.field(1, 1).pictureNr,
+        (1, 0) -> c.field(1, 0).pictureNr).toList.sortBy { _._2 }: _*)
     var keys = coordinates.keys.toSeq
     var coordsone: Coordinates = keys(0)
     var coordstwo: Coordinates = keys(1)
